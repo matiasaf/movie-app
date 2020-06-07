@@ -9,11 +9,8 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles({
     root: {
         minWidth: 275,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
+        marginTop: 15,
+        width: '100%'
     },
     title: {
         fontSize: 14,
@@ -25,7 +22,6 @@ const useStyles = makeStyles({
 
 export default function MovieCard({ movie }) {
     const classes = useStyles();
-    const bull = <span className={classes.bullet}>•</span>;
 
     return (
         <Card className={classes.root}>
@@ -44,9 +40,9 @@ export default function MovieCard({ movie }) {
                     {movie.year}
                 </Typography>
             </CardContent>
-            <CardActions>
+            {/* <CardActions>
                 <Button size="small">More info</Button>
-            </CardActions>
+            </CardActions> */}
         </Card>
     );
 }

@@ -1,19 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import {
-    FormControl,
-    InputLabel,
-    Button,
-    Input,
-    Container
-} from '@material-ui/core';
-import axios from 'axios';
+import React, { useContext, useEffect } from 'react';
+import { Container, CircularProgress } from '@material-ui/core';
+import { Auth } from 'aws-amplify';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import './App.css';
-import MovieCard from './components/moviecard';
 import Navbar from './components/navbar';
+import SignIn from './pages/signin';
+import Login from './pages/login';
 
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { CTX } from './Store';
+import ListMovies from './components/listmovies';
+import PrivateRoute from './components/private-route';
 
 function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
@@ -26,68 +25,37 @@ function App() {
             }),
         [prefersDarkMode]
     );
+    const [{ loggedUser }, dispatch] = useContext(CTX);
 
-    const [movies, setMovies] = useState([]);
-    const [title, setTitle] = useState(null);
-    const [year, setYear] = useState(null);
-    const [director, setDirector] = useState(null);
-    const getMovies = async () => {
-        const { data } = await axios.get(
-            `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies`
-        );
-        setMovies(data);
+    const checkAuth = async () => {
+        const currentSession = await Auth.currentAuthenticatedUser();
+        dispatch({ type: 'SET_AUTH_USER', payload: currentSession });
     };
+
     useEffect(() => {
-        getMovies();
+        checkAuth();
     }, []);
-
-    const handleChangeTitle = (e) => setTitle(e.target.value);
-    const handleChangeYear = (e) => setYear(e.target.value);
-    const handleChangeDirector = (e) => setDirector(e.target.value);
-
-    const saveMovie = async () => {
-        const movie = {
-            title,
-            year,
-            director,
-        };
-        const res = await axios.post(
-            'https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies',
-            movie
-        );
-        console.log(res);
-    };
 
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline/>
-            <Navbar />
-            <Container fixed>
-                <div>
-                    <header className="App-header">Movies</header>
-                    {movies &&
-                        movies.map((movie) => <MovieCard movie={movie} />)}
-                </div>
-                <FormControl>
-                    <InputLabel htmlFor="my-input">Titulo:</InputLabel>
-                    <Input onChange={(e) => handleChangeTitle(e)} />
-                </FormControl>
-                <FormControl>
-                    <InputLabel htmlFor="my-input">Año:</InputLabel>
-                    <Input onChange={(e) => handleChangeYear(e)} />
-                </FormControl>
-                <FormControl>
-                    <InputLabel htmlFor="my-input">Director:</InputLabel>
-                    <Input onChange={(e) => handleChangeDirector(e)} />
-                </FormControl>
-                <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => saveMovie()}
-                >
-                    Guardar
-                </Button>
-            </Container>
+            <Router>
+                <CssBaseline />
+                <Navbar />
+                <Container fixed>
+                    {/* <SignIn /> */}
+                    {/* {!loggedUser && <Login />}
+                    {loggedUser && <ListMovies />} */}
+                    <Switch>
+                        <PrivateRoute exact path="/" component={ListMovies} />
+                        <Route path="/login">
+                            <Login />
+                        </Route>
+                        <Route path="/register">
+                            <SignIn />
+                        </Route>
+                    </Switch>
+                </Container>
+            </Router>
         </ThemeProvider>
     );
 }
