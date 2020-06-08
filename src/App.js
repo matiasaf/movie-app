@@ -13,6 +13,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { CTX } from './Store';
 import ListMovies from './components/listmovies';
 import PrivateRoute from './components/private-route';
+import NewMoviePage from './pages/newmovie';
 
 function App() {
     const theme = createMuiTheme({
@@ -37,11 +38,10 @@ function App() {
                 <CssBaseline />
                 <Navbar />
                 <Container fixed>
-                    {/* <SignIn /> */}
-                    {/* {!loggedUser && <Login />}
-                    {loggedUser && <ListMovies />} */}
                     <Switch>
                         <PrivateRoute exact path="/" component={ListMovies} />
+                        <PrivateRoute path="/newmovie" component={NewMoviePage} />
+
                         <Route path="/login">
                             <Login />
                         </Route>

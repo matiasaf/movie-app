@@ -15,10 +15,12 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import BottomAppBar from '../bottom-nav-bar';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(16),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -28,8 +30,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.secondary.main,
     },
     loader: {
-        marginTop: theme.spacing(4)
-    }
+        marginTop: theme.spacing(4),
+    },
 }));
 
 export default function ListMovies() {
@@ -59,7 +61,10 @@ export default function ListMovies() {
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
+            <BottomAppBar />
+
             <div className={classes.paper}>
+
                 <Avatar className={classes.avatar}>
                     <Favorite />
                 </Avatar>
@@ -67,9 +72,10 @@ export default function ListMovies() {
                     Movies
                 </Typography>
 
-                {loader && <CircularProgress className={classes.loader}/>}
+                {loader && <CircularProgress className={classes.loader} />}
 
                 {movies && movies.map((movie) => <MovieCard movie={movie} />)}
+
             </div>
         </Container>
     );
