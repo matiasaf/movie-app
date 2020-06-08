@@ -15,6 +15,12 @@ function reducer(state, action) {
                 movies: action.payload,
                 loader: false,
             };
+        case 'SET_DETAIL_MOVIE':
+                return {
+                    ...state,
+                    movieDetail: action.payload,
+                    loader: false,
+                };
         case 'LOADER_ON':
             return {
                 ...state,
@@ -31,6 +37,7 @@ export default function Store(props) {
         loggedUser: '',
         movies: [],
         loader: false,
+        movieDetail:''
     });
     return <CTX.Provider value={reducerHook}>{props.children}</CTX.Provider>;
 }

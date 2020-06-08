@@ -4,6 +4,7 @@ import Card from '@material-ui/core/Card';
 import { CardMedia, CardActions, CardContent } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
     root: {
@@ -25,9 +26,14 @@ const useStyles = makeStyles({
 
 export default function MovieCard({ movie }) {
     const classes = useStyles();
+    let history = useHistory();
+
+    const openMovieDetails = () => {
+        history.push(`/movie-details/${movie.id}`, movie);
+    };
 
     return (
-        <Card className={classes.root}>
+        <Card className={classes.root} onClick={() => openMovieDetails()}>
             <CardMedia
                 className={classes.media}
                 image={movie.imageUrl ? movie.imageUrl : ''}

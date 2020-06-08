@@ -14,6 +14,7 @@ import { CTX } from './Store';
 import ListMovies from './components/listmovies';
 import PrivateRoute from './components/private-route';
 import NewMoviePage from './pages/newmovie';
+import MovieDetailsPage from './pages/movie-details';
 
 function App() {
     const theme = createMuiTheme({
@@ -41,6 +42,7 @@ function App() {
                     <Switch>
                         <PrivateRoute path="/movies" component={ListMovies} />
                         <PrivateRoute path="/newmovie" component={NewMoviePage} />
+                        <PrivateRoute exact path="/movie-details/:id" component={MovieDetailsPage} />
 
                         <Route path="/login">
                             <Login />
