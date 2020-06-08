@@ -15,16 +15,11 @@ import ListMovies from './components/listmovies';
 import PrivateRoute from './components/private-route';
 
 function App() {
-    const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const theme = React.useMemo(
-        () =>
-            createMuiTheme({
-                palette: {
-                    type: prefersDarkMode ? 'dark' : 'light',
-                },
-            }),
-        [prefersDarkMode]
-    );
+    const theme = createMuiTheme({
+        palette: {
+            type: 'dark',
+        },
+    });
     const [{ loggedUser }, dispatch] = useContext(CTX);
 
     const checkAuth = async () => {
