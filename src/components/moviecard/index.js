@@ -30,7 +30,7 @@ export default function MovieCard({ movie }) {
         <Card className={classes.root}>
             <CardMedia
                 className={classes.media}
-                image={movie.urlImage ? movie.urlImage : ''}
+                image={movie.imageUrl ? movie.imageUrl : ''}
                 title="Paella dish"
             />
             <CardContent>

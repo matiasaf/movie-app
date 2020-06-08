@@ -32,22 +32,24 @@ const useStyles = makeStyles((theme) => ({
     loader: {
         marginTop: theme.spacing(4),
     },
+    empty : {
+        marginTop: theme.spacing(4),
+    }
 }));
 
 export default function ListMovies() {
     const classes = useStyles();
-    const [{ movies, loader }, dispatch] = useContext(CTX);
+    const [{ movies, loggedUser, loader }, dispatch] = useContext(CTX);
 
     const getMovies = async () => {
         dispatch({ type: 'LOADER_ON' });
-
-        const _currentsession = await Auth.currentSession();
-        if (_currentsession) {
+        const currentSession = await Auth.currentSession();
+        if (currentSession) {
             const { data } = await Axios.get(
-                `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies`,
+                `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies/${loggedUser.username}`,
                 {
                     headers: {
-                        Authorization: `${_currentsession.idToken.jwtToken}`,
+                        Authorization: `${currentSession.idToken.jwtToken}`,
                     },
                 }
             );
@@ -64,7 +66,6 @@ export default function ListMovies() {
             <BottomAppBar />
 
             <div className={classes.paper}>
-
                 <Avatar className={classes.avatar}>
                     <Favorite />
                 </Avatar>
@@ -74,55 +75,13 @@ export default function ListMovies() {
 
                 {loader && <CircularProgress className={classes.loader} />}
 
+                {!loader && movies.length === 0 && (
+                    <Typography component="h1" variant="h5" className={classes.empty}>
+                        Not favourites movies yet.
+                    </Typography>
+                )}
                 {movies && movies.map((movie) => <MovieCard movie={movie} />)}
-
             </div>
         </Container>
     );
 }
-
-// import React, { useContext, useEffect } from 'react';
-// import { Typography, CircularProgress } from '@material-ui/core';
-// import { Favorite } from '@material-ui/icons';
-
-// import { CTX } from '../../Store';
-// import Axios from 'axios';
-// import { Auth } from 'aws-amplify';
-// import MovieCard from '../moviecard';
-// import './index.css';
-
-// export default function ListMovies() {
-//     const [{ movies, loader }, dispatch] = useContext(CTX);
-
-//     const getMovies = async () => {
-//         dispatch({ type: 'LOADER_ON' });
-
-//         const _currentsession = await Auth.currentSession();
-//         if (_currentsession) {
-//             const { data } = await Axios.get(
-//                 `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies`,
-//                 {
-//                     headers: {
-//                         Authorization: `${_currentsession.idToken.jwtToken}`,
-//                     },
-//                 }
-//             );
-//             dispatch({ type: 'SET_MOVIES', payload: data });
-//         }
-//     };
-//     useEffect(() => {
-//         getMovies();
-//     }, []);
-//     return (
-//         <div className="container">
-//             <div>
-//                 <Favorite/>
-//                 <Typography>movies</Typography>
-//             </div>
-
-//             {loader && <CircularProgress />}
-
-//             {movies && movies.map((movie) => <MovieCard movie={movie} />)}
-//         </div>
-//     );
-// }

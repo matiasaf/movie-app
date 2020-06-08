@@ -53,7 +53,7 @@ export default function ButtonAppBar() {
                         color="inherit"
                         aria-label="menu"
                     >
-                        <Link to="/" className={classes.menuIcon}>
+                        <Link to="/movies" className={classes.menuIcon}>
                             <MenuIcon />
                         </Link>
                     </IconButton>

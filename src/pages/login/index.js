@@ -48,7 +48,7 @@ export default function LogIn() {
     const login = async ({ username, password }) => {
         const res = await Auth.signIn(username, password);
         dispatch({ type: 'SET_AUTH_USER', payload: res });
-        history.push('/');
+        history.push('/movies');
     };
 
     return (

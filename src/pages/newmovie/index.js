@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
+import { Auth } from 'aws-amplify';
 import { useForm } from 'react-hook-form';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import { CTX } from '../../Store';
 
@@ -8,7 +9,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
@@ -43,20 +43,28 @@ export default function NewMoviePage() {
     const classes = useStyles();
     let history = useHistory();
     const { register, errors, handleSubmit } = useForm();
-    const [{}, dispatch] = useContext(CTX);
+    const [{loggedUser}, dispatch] = useContext(CTX);
 
     const saveMovie = async ({ title, year, director, imageUrl }) => {
+        const currentSession = await Auth.currentSession();
         const movie = {
             title,
             year,
             director,
             imageUrl,
+            userId: loggedUser.username,
         };
-        console.log(movie);
-        // const res = await axios.post(
-        //     'https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies',
-        //     movie
-        // );
+
+        const res = await axios.post(
+            'https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies',
+            movie,
+            {
+                headers: {
+                    Authorization: `${currentSession.idToken.jwtToken}`,
+                },
+            }
+        );
+        history.push('/movies')
     };
 
     return (

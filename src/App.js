@@ -39,7 +39,7 @@ function App() {
                 <Navbar />
                 <Container fixed>
                     <Switch>
-                        <PrivateRoute exact path="/" component={ListMovies} />
+                        <PrivateRoute path="/movies" component={ListMovies} />
                         <PrivateRoute path="/newmovie" component={NewMoviePage} />
 
                         <Route path="/login">

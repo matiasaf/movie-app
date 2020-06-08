@@ -1,14 +1,20 @@
-import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { useContext } from 'react';
+import { fade, makeStyles } from '@material-ui/core/styles';
 import { Link, useHistory } from 'react-router-dom';
+import matchSorter from 'match-sorter';
+
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
+import InputBase from '@material-ui/core/InputBase';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import { CTX } from '../../Store';
+import { Auth } from 'aws-amplify';
+import Axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
     text: {
@@ -38,14 +44,77 @@ const useStyles = makeStyles((theme) => ({
         right: 0,
         margin: '0 auto',
     },
+    search: {
+        position: 'relative',
+        borderRadius: theme.shape.borderRadius,
+        backgroundColor: fade(theme.palette.common.white, 0.15),
+        '&:hover': {
+            backgroundColor: fade(theme.palette.common.white, 0.25),
+        },
+        marginLeft: 0,
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            marginLeft: theme.spacing(1),
+            width: 'auto',
+        },
+    },
+    searchIcon: {
+        padding: theme.spacing(0, 2),
+        height: '100%',
+        position: 'absolute',
+        pointerEvents: 'none',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    inputRoot: {
+        color: 'inherit',
+    },
+    inputInput: {
+        padding: theme.spacing(1, 1, 1, 0),
+        // vertical padding + font size from searchIcon
+        paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+        transition: theme.transitions.create('width'),
+        width: '100%',
+        [theme.breakpoints.up('sm')]: {
+            width: '12ch',
+            '&:focus': {
+                width: '20ch',
+            },
+        },
+    },
 }));
 
 export default function BottomAppBar() {
     const classes = useStyles();
     let history = useHistory();
+    const [{ movies, loggedUser }, dispatch] = useContext(CTX);
 
     const goToNewMovie = () => {
         history.push('/newmovie');
+    };
+
+    const filterMovies = async (e) => {
+        if (!e.target.value) {
+            dispatch({ type: 'LOADER_ON' });
+            const currentSession = await Auth.currentSession();
+            if (currentSession) {
+                const { data } = await Axios.get(
+                    `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies/${loggedUser.username}`,
+                    {
+                        headers: {
+                            Authorization: `${currentSession.idToken.jwtToken}`,
+                        },
+                    }
+                );
+                dispatch({ type: 'SET_MOVIES', payload: data });
+            }
+        } else {
+            const moviesFiltered = matchSorter(movies, e.target.value, {
+                keys: ['title', 'director', 'year'],
+            });
+            dispatch({ type: 'SET_MOVIES', payload: moviesFiltered });
+        }
     };
 
     return (
@@ -66,9 +135,20 @@ export default function BottomAppBar() {
                     </Fab>
 
                     <div className={classes.grow} />
-                    <IconButton color="inherit">
-                        <SearchIcon />
-                    </IconButton>
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon />
+                        </div>
+                        <InputBase
+                            placeholder="Search…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput,
+                            }}
+                            inputProps={{ 'aria-label': 'search' }}
+                            onChange={filterMovies}
+                        />
+                    </div>
                     <IconButton edge="end" color="inherit">
                         <MoreIcon />
                     </IconButton>
