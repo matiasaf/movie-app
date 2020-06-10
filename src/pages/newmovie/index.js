@@ -36,6 +36,10 @@ const useStyles = makeStyles((theme) => ({
     colorLink: {
         color: 'white',
     },
+    inputFile : {
+        marginTop: theme.spacing(2),
+        marginBottom: theme.spacing(1),
+    }
 }));
 
 export default function NewMoviePage() {
@@ -44,7 +48,13 @@ export default function NewMoviePage() {
     const { register, errors, handleSubmit } = useForm();
     const [{ loggedUser }, dispatch] = useContext(CTX);
 
-    const saveMovie = async ({ title, year, director, imageUrl, description }) => {
+    const saveMovie = async ({
+        title,
+        year,
+        director,
+        imageUrl,
+        description,
+    }) => {
         const currentSession = await Auth.currentSession();
         const movie = {
             title,
@@ -115,16 +125,11 @@ export default function NewMoviePage() {
                         autoComplete="year"
                     />
 
-                    <TextField
-                        variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        inputRef={register}
-                        name="imageUrl"
-                        label="ImageUrl"
-                        autoComplete="imageUrl"
-                    />
+
+                    <Button fullWidth className={classes.inputFile} variant="contained" component="label">
+                        Upload Image Film
+                        <input type="file" style={{ display: 'none' }} />
+                    </Button>
 
                     <TextField
                         variant="outlined"
