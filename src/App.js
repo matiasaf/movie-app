@@ -43,7 +43,7 @@ function App() {
                 <Container fixed>
                     <Switch>
                         <PrivateRoute path="/movies" component={ListMovies} />
-                        <PrivateRoute path="/newmovie" component={NewMoviePage} />
+                        <Route path="/newmovie" component={NewMoviePage} />
                         <Route exact path="/movie-details/:id" component={MovieDetailsPage} />
 
                         <Route path="/login">
