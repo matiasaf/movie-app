@@ -9,7 +9,6 @@ import {
 import Axios from 'axios';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
-import BottomAppBar from '../../components/bottom-nav-bar';
 import CommentsSection from '../../components/comments-section';
 
 const useStyles = makeStyles((theme) => ({
@@ -80,7 +79,6 @@ export default function MovieDetailsPage({ location, match }) {
 
     return (
         <div>
-            <BottomAppBar />
             <div className={classes.root}>
                 <Paper className={classes.paper}>
                     <Grid container spacing={2}>

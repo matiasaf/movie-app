@@ -15,6 +15,7 @@ import ListMovies from './components/listmovies';
 import PrivateRoute from './components/private-route';
 import NewMoviePage from './pages/newmovie';
 import MovieDetailsPage from './pages/movie-details';
+import BottomAppBar from './components/bottom-nav-bar';
 
 function App() {
     const theme = createMuiTheme({
@@ -38,6 +39,7 @@ function App() {
             <Router>
                 <CssBaseline />
                 {/* <Navbar /> */}
+                <BottomAppBar />
                 <Container fixed>
                     <Switch>
                         <PrivateRoute path="/movies" component={ListMovies} />

@@ -15,7 +15,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import BottomAppBar from '../bottom-nav-bar';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -32,9 +31,9 @@ const useStyles = makeStyles((theme) => ({
     loader: {
         marginTop: theme.spacing(4),
     },
-    empty : {
+    empty: {
         marginTop: theme.spacing(4),
-    }
+    },
 }));
 
 export default function ListMovies() {
@@ -63,8 +62,6 @@ export default function ListMovies() {
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline />
-            <BottomAppBar />
-
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
                     <Favorite />
@@ -76,7 +73,11 @@ export default function ListMovies() {
                 {loader && <CircularProgress className={classes.loader} />}
 
                 {!loader && movies.length === 0 && (
-                    <Typography component="h1" variant="h5" className={classes.empty}>
+                    <Typography
+                        component="h1"
+                        variant="h5"
+                        className={classes.empty}
+                    >
                         Not favourites movies yet.
                     </Typography>
                 )}

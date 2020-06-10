@@ -110,6 +110,10 @@ export default function BottomAppBar() {
         history.push('/movies');
     };
 
+    const goToLoginPage = () => {
+        history.push('/login');
+    };
+
     const logout = async () => {
         await Auth.signOut();
         dispatch({ type: 'SET_AUTH_USER', payload: '' });
@@ -184,7 +188,11 @@ export default function BottomAppBar() {
                             onChange={filterMovies}
                         />
                     </div>
-                    <IconButton edge="end" color="inherit" onClick={handleClick}>
+                    <IconButton
+                        edge="end"
+                        color="inherit"
+                        onClick={handleClick}
+                    >
                         <MoreIcon />
                     </IconButton>
 
@@ -197,7 +205,14 @@ export default function BottomAppBar() {
                     >
                         {/* <MenuItem onClick={handleClose}>Profile</MenuItem>
                         <MenuItem onClick={handleClose}>My account</MenuItem> */}
-                        <MenuItem onClick={() => logout()}>Logout</MenuItem>
+                        {loggedUser && (
+                            <MenuItem onClick={() => logout()}>Logout</MenuItem>
+                        )}
+                        {!loggedUser && (
+                            <MenuItem onClick={() => goToLoginPage()}>
+                                Login
+                            </MenuItem>
+                        )}
                     </Menu>
                 </Toolbar>
             </AppBar>
