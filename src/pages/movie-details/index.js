@@ -4,11 +4,7 @@ import {
     Typography,
     makeStyles,
     Grid,
-    ButtonBase,
-    List,
-    ListSubheader,
-    ListItem,
-    ListItemText,
+    ButtonBase
 } from '@material-ui/core';
 import Axios from 'axios';
 import { CTX } from '../../Store';
@@ -57,12 +53,10 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MovieDetailsPage({ location, match }) {
     const [{ loader, movieDetail }, dispatch] = useContext(CTX);
-    const [movie, setMovie] = useState(location.state);
     const classes = useStyles();
 
     const getMovie = async (id) => {
         dispatch({ type: 'LOADER_ON' });
-        // if (!location.state) {
         const currentSession = await Auth.currentSession();
         if (currentSession) {
             const { data } = await Axios.get(
@@ -75,10 +69,13 @@ export default function MovieDetailsPage({ location, match }) {
             );
             dispatch({ type: 'SET_DETAIL_MOVIE', payload: data });
         }
-        // }
     };
     useEffect(() => {
-        getMovie(match.params.id);
+        if (location.state) {
+            dispatch({ type: 'SET_DETAIL_MOVIE', payload: location.state });
+        } else {
+            getMovie(match.params.id);
+        }
     }, []);
 
     return (
@@ -93,9 +90,6 @@ export default function MovieDetailsPage({ location, match }) {
                                     className={classes.img}
                                     alt="complex"
                                     src={
-                                        // movie
-                                        //     ? movie.imageUrl
-                                        //     : movieDetail.imageUrl
                                         movieDetail ? movieDetail.imageUrl : ''
                                     }
                                 />
@@ -115,48 +109,28 @@ export default function MovieDetailsPage({ location, match }) {
                                         variant="subtitle1"
                                     >
                                         Title:{' '}
-                                        {
-                                            // movie
-                                            //     ? movie.title
-                                            //     : movieDetail.title
-                                            movieDetail ? movieDetail.title : ''
-                                        }
+                                        {movieDetail ? movieDetail.title : ''}
                                     </Typography>
                                     <Typography variant="body2" gutterBottom>
                                         Director:{' '}
-                                        {
-                                            /* {movie
-                                            ? movie.director
-                                            : movieDetail.director} */
-                                            movieDetail
-                                                ? movieDetail.director
-                                                : ''
-                                        }
+                                        {movieDetail
+                                            ? movieDetail.director
+                                            : ''}
                                     </Typography>
                                     <Typography
                                         variant="body2"
                                         color="textSecondary"
                                     >
                                         Synopsis:{' '}
-                                        {
-                                            /* {movie
-                                            ? movie.description
-                                            : movieDetail.description} */
-                                            movieDetail
-                                                ? movieDetail.description
-                                                : ''
-                                        }
+                                        {movieDetail
+                                            ? movieDetail.description
+                                            : ''}
                                     </Typography>
                                 </Grid>
                             </Grid>
                             <Grid item>
                                 <Typography variant="subtitle1">
-                                    {
-                                        /* {movie ? movie.year : movieDetail.year} */
-                                        movieDetail
-                                            ? movieDetail.year
-                                            : ''
-                                    }
+                                    {movieDetail ? movieDetail.year : ''}
                                 </Typography>
                             </Grid>
                         </Grid>
