@@ -42,15 +42,16 @@ export default function NewMoviePage() {
     const classes = useStyles();
     let history = useHistory();
     const { register, errors, handleSubmit } = useForm();
-    const [{loggedUser}, dispatch] = useContext(CTX);
+    const [{ loggedUser }, dispatch] = useContext(CTX);
 
-    const saveMovie = async ({ title, year, director, imageUrl }) => {
+    const saveMovie = async ({ title, year, director, imageUrl, description }) => {
         const currentSession = await Auth.currentSession();
         const movie = {
             title,
             year,
             director,
             imageUrl,
+            description,
             userId: loggedUser.username,
         };
 
@@ -63,7 +64,7 @@ export default function NewMoviePage() {
                 },
             }
         );
-        history.push('/movies')
+        history.push('/movies');
     };
 
     return (
@@ -123,6 +124,18 @@ export default function NewMoviePage() {
                         name="imageUrl"
                         label="ImageUrl"
                         autoComplete="imageUrl"
+                    />
+
+                    <TextField
+                        variant="outlined"
+                        margin="normal"
+                        multiline
+                        rows={4}
+                        fullWidth
+                        inputRef={register}
+                        name="description"
+                        label="Synopsis"
+                        autoComplete="Synopsis"
                     />
 
                     <Button
