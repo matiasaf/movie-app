@@ -14,6 +14,7 @@ import Axios from 'axios';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
 import BottomAppBar from '../../components/bottom-nav-bar';
+import CommentsSection from '../../components/comments-section';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -36,7 +37,6 @@ const useStyles = makeStyles((theme) => ({
         maxWidth: '100%',
         maxHeight: '100%',
     },
-
     rootComments: {
         margin: 'auto',
         maxWidth: 700,
@@ -62,29 +62,28 @@ export default function MovieDetailsPage({ location, match }) {
 
     const getMovie = async (id) => {
         dispatch({ type: 'LOADER_ON' });
-        if (location.state.id) {
-            const currentSession = await Auth.currentSession();
-            if (currentSession) {
-                const { data } = await Axios.get(
-                    `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movie/${id}`,
-                    {
-                        headers: {
-                            Authorization: `${currentSession.idToken.jwtToken}`,
-                        },
-                    }
-                );
-                console.log(data);
-                dispatch({ type: 'SET_DETAIL_MOVIE', payload: data });
-            }
+        // if (!location.state) {
+        const currentSession = await Auth.currentSession();
+        if (currentSession) {
+            const { data } = await Axios.get(
+                `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movie/${id}`,
+                {
+                    headers: {
+                        Authorization: `${currentSession.idToken.jwtToken}`,
+                    },
+                }
+            );
+            dispatch({ type: 'SET_DETAIL_MOVIE', payload: data });
         }
+        // }
     };
     useEffect(() => {
         getMovie(match.params.id);
     }, []);
+
     return (
         <div>
             <BottomAppBar />
-
             <div className={classes.root}>
                 <Paper className={classes.paper}>
                     <Grid container spacing={2}>
@@ -93,7 +92,12 @@ export default function MovieDetailsPage({ location, match }) {
                                 <img
                                     className={classes.img}
                                     alt="complex"
-                                    src={movie.imageUrl}
+                                    src={
+                                        // movie
+                                        //     ? movie.imageUrl
+                                        //     : movieDetail.imageUrl
+                                        movieDetail ? movieDetail.imageUrl : ''
+                                    }
                                 />
                             </ButtonBase>
                         </Grid>
@@ -110,50 +114,56 @@ export default function MovieDetailsPage({ location, match }) {
                                         gutterBottom
                                         variant="subtitle1"
                                     >
-                                        Title: {movie.title ? movie.title : ''}
+                                        Title:{' '}
+                                        {
+                                            // movie
+                                            //     ? movie.title
+                                            //     : movieDetail.title
+                                            movieDetail ? movieDetail.title : ''
+                                        }
                                     </Typography>
                                     <Typography variant="body2" gutterBottom>
                                         Director:{' '}
-                                        {movie.director ? movie.director : ''}
+                                        {
+                                            /* {movie
+                                            ? movie.director
+                                            : movieDetail.director} */
+                                            movieDetail
+                                                ? movieDetail.director
+                                                : ''
+                                        }
                                     </Typography>
                                     <Typography
                                         variant="body2"
                                         color="textSecondary"
                                     >
                                         Synopsis:{' '}
-                                        {movie.description
+                                        {
+                                            /* {movie
                                             ? movie.description
-                                            : ''}
+                                            : movieDetail.description} */
+                                            movieDetail
+                                                ? movieDetail.description
+                                                : ''
+                                        }
                                     </Typography>
                                 </Grid>
                             </Grid>
                             <Grid item>
                                 <Typography variant="subtitle1">
-                                    {movie.year ? movie.year : ''}
+                                    {
+                                        /* {movie ? movie.year : movieDetail.year} */
+                                        movieDetail
+                                            ? movieDetail.year
+                                            : ''
+                                    }
                                 </Typography>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Paper>
-                <List className={classes.rootComments} subheader={<li />}>
-                    {[0, 1, 2, 3, 4].map((sectionId) => (
-                        <li
-                            key={`section-${sectionId}`}
-                            className={classes.listSection}
-                        >
-                            <ul className={classes.ul}>
-                                <ListSubheader>{`${sectionId}/06/2020`}</ListSubheader>
-                                {[0, 1, 2].map((item) => (
-                                    <ListItem key={`item-${sectionId}-${item}`}>
-                                        <ListItemText
-                                            primary={`Comment ${item}`}
-                                        />
-                                    </ListItem>
-                                ))}
-                            </ul>
-                        </li>
-                    ))}
-                </List>
+
+                <CommentsSection movie={movieDetail} />
             </div>
         </div>
     );

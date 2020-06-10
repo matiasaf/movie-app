@@ -42,7 +42,7 @@ function App() {
                     <Switch>
                         <PrivateRoute path="/movies" component={ListMovies} />
                         <PrivateRoute path="/newmovie" component={NewMoviePage} />
-                        <PrivateRoute exact path="/movie-details/:id" component={MovieDetailsPage} />
+                        <Route exact path="/movie-details/:id" component={MovieDetailsPage} />
 
                         <Route path="/login">
                             <Login />
