@@ -60,7 +60,6 @@ export default function AddComment({ movieId }) {
                 inputRef={register}
                 name="text"
                 autoComplete="text"
-                autoFocus
             />
             <Button
                 type="submit"

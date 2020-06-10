@@ -10,11 +10,14 @@ import IconButton from '@material-ui/core/IconButton';
 import InputBase from '@material-ui/core/InputBase';
 import Fab from '@material-ui/core/Fab';
 import AddIcon from '@material-ui/icons/Add';
+import Favorite from '@material-ui/icons/Favorite';
+import Visibility from '@material-ui/icons/Visibility';
 import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
 import Axios from 'axios';
+import { Menu, MenuItem } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
     text: {
@@ -89,9 +92,28 @@ export default function BottomAppBar() {
     const classes = useStyles();
     let history = useHistory();
     const [{ movies, loggedUser }, dispatch] = useContext(CTX);
+    const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
 
     const goToNewMovie = () => {
         history.push('/newmovie');
+    };
+
+    const goToFavsMovies = () => {
+        history.push('/movies');
+    };
+
+    const logout = async () => {
+        await Auth.signOut();
+        dispatch({ type: 'SET_AUTH_USER', payload: '' });
+        history.push('/login');
     };
 
     const filterMovies = async (e) => {
@@ -123,9 +145,22 @@ export default function BottomAppBar() {
 
             <AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
-                    {/* <IconButton edge="start" color="inherit" aria-label="open drawer">
-            <MenuIcon />
-          </IconButton> */}
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={() => goToFavsMovies()}
+                    >
+                        <Favorite />
+                    </IconButton>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={() => goToFavsMovies()}
+                    >
+                        <Visibility />
+                    </IconButton>
                     <Fab
                         color="secondary"
                         aria-label="add"
@@ -149,9 +184,21 @@ export default function BottomAppBar() {
                             onChange={filterMovies}
                         />
                     </div>
-                    <IconButton edge="end" color="inherit">
+                    <IconButton edge="end" color="inherit" onClick={handleClick}>
                         <MoreIcon />
                     </IconButton>
+
+                    <Menu
+                        id="simple-menu"
+                        anchorEl={anchorEl}
+                        keepMounted
+                        open={Boolean(anchorEl)}
+                        onClose={handleClose}
+                    >
+                        {/* <MenuItem onClick={handleClose}>Profile</MenuItem>
+                        <MenuItem onClick={handleClose}>My account</MenuItem> */}
+                        <MenuItem onClick={() => logout()}>Logout</MenuItem>
+                    </Menu>
                 </Toolbar>
             </AppBar>
         </React.Fragment>

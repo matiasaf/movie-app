@@ -37,7 +37,7 @@ function App() {
         <ThemeProvider theme={theme}>
             <Router>
                 <CssBaseline />
-                <Navbar />
+                {/* <Navbar /> */}
                 <Container fixed>
                     <Switch>
                         <PrivateRoute path="/movies" component={ListMovies} />
