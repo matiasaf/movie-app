@@ -15,6 +15,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import config from '../../config';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -55,8 +56,13 @@ export default function ListMovies() {
             dispatch({ type: 'SET_MOVIES', payload: data });
         }
     };
+
+    const getMoviesFromAPI = async () => {
+        const data = await Axios.get(`${config.themovieDB.API_URL}/movie/popular${config.themovieDB.API_KEY}`)
+        console.log(data);
+    }
     useEffect(() => {
-        getMovies();
+        getMoviesFromAPI();
     }, []);
 
     return (

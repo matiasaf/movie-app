@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ## [0.0.3]
+- Integrate the moviedb API.
+- Add the filmaffinity option button.
+- Can edit the movie for adding the filmaffinity link.
+- Get the most popular movies.
+- Adding the search by name on movies.
+- Correct for display the correct information comming from the moviedb API.
 - Distinguish between movies to watch or favorites.
 - (ADD A MOVIE) Change the icon on adding a movie.
-- (ADD A MOVIE) Change the way we added a picture to the movie.
 - (ADD A MOVIE) Adding the description (synopsis) field.
 
 ## [Released]

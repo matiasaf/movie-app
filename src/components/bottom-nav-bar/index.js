@@ -7,16 +7,11 @@ import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import InputBase from '@material-ui/core/InputBase';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
 import Favorite from '@material-ui/icons/Favorite';
 import Visibility from '@material-ui/icons/Visibility';
-import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
-import Axios from 'axios';
 import { Menu, MenuItem } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
@@ -85,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
                 width: '20ch',
             },
         },
-    },
+    }
 }));
 
 export default function BottomAppBar() {
@@ -102,12 +97,8 @@ export default function BottomAppBar() {
         setAnchorEl(null);
     };
 
-    const goToNewMovie = () => {
-        history.push('/newmovie');
-    };
-
     const goToFavsMovies = () => {
-        history.push('/movies');
+        history.push('/popular');
     };
 
     const goToLoginPage = () => {
@@ -120,35 +111,13 @@ export default function BottomAppBar() {
         history.push('/login');
     };
 
-    const filterMovies = async (e) => {
-        if (!e.target.value) {
-            dispatch({ type: 'LOADER_ON' });
-            const currentSession = await Auth.currentSession();
-            if (currentSession) {
-                const { data } = await Axios.get(
-                    `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies/${loggedUser.username}`,
-                    {
-                        headers: {
-                            Authorization: `${currentSession.idToken.jwtToken}`,
-                        },
-                    }
-                );
-                dispatch({ type: 'SET_MOVIES', payload: data });
-            }
-        } else {
-            const moviesFiltered = matchSorter(movies, e.target.value, {
-                keys: ['title', 'director', 'year'],
-            });
-            dispatch({ type: 'SET_MOVIES', payload: moviesFiltered });
-        }
-    };
-
     return (
         <React.Fragment>
             <CssBaseline />
 
             <AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
+                    <div className={classes.grow} />
                     <IconButton
                         edge="start"
                         color="inherit"
@@ -161,33 +130,13 @@ export default function BottomAppBar() {
                         edge="start"
                         color="inherit"
                         aria-label="open drawer"
+                        className={classes.eye}
                         onClick={() => goToFavsMovies()}
                     >
                         <Visibility />
                     </IconButton>
-                    <Fab
-                        color="secondary"
-                        aria-label="add"
-                        className={classes.fabButton}
-                    >
-                        <AddIcon onClick={() => goToNewMovie()} />
-                    </Fab>
 
-                    <div className={classes.grow} />
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput,
-                            }}
-                            inputProps={{ 'aria-label': 'search' }}
-                            onChange={filterMovies}
-                        />
-                    </div>
+                    
                     <IconButton
                         edge="end"
                         color="inherit"

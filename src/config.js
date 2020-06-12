@@ -8,4 +8,8 @@ export default {
         user_pool_id: 'us-east-2_68URLb3L2',
         app_client_id: '7bm84nej4e1cm3tqanua1i4n26',
     },
+    themovieDB: {
+        API_URL: `https://api.themoviedb.org/3`,
+        API_KEY: `?api_key=77fbfe00bfae4ff562d624c11127de44`
+    }
 };

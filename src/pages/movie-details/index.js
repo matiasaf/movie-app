@@ -4,12 +4,15 @@ import {
     Typography,
     makeStyles,
     Grid,
-    ButtonBase
+    ButtonBase,
+    CircularProgress,
 } from '@material-ui/core';
 import Axios from 'axios';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
 import CommentsSection from '../../components/comments-section';
+import { ReactComponent as IMDB } from './imdb-logo.svg';
+import config from '../../config';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -23,8 +26,8 @@ const useStyles = makeStyles((theme) => ({
         marginBottom: theme.spacing(2),
     },
     image: {
-        width: '100%',
-        height: '100%',
+        width: 130,
+        // height: '100%',
     },
     img: {
         margin: 'auto',
@@ -48,16 +51,22 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: 'inherit',
         padding: 0,
     },
+    imdb: {
+        height: 40,
+        width: 50,
+    },
 }));
 
 export default function MovieDetailsPage({ location, match }) {
-    const [{ loader, movieDetail }, dispatch] = useContext(CTX);
+    const [{ loader, loggedUser, movieDetail }, dispatch] = useContext(CTX);
     const classes = useStyles();
 
     const getMovie = async (id) => {
         dispatch({ type: 'LOADER_ON' });
+
+        // first check if the movie exist on dynamodb
         const currentSession = await Auth.currentSession();
-        if (currentSession) {
+        try {
             const { data } = await Axios.get(
                 `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movie/${id}`,
                 {
@@ -67,72 +76,95 @@ export default function MovieDetailsPage({ location, match }) {
                 }
             );
             dispatch({ type: 'SET_DETAIL_MOVIE', payload: data });
+        } catch (e) {
+            const { data } = await Axios.get(
+                `${config.themovieDB.API_URL}/movie/${id}${config.themovieDB.API_KEY}`,
+                {
+                    headers: {
+                        Authorization: `${currentSession.idToken.jwtToken}`,
+                    },
+                }
+            );
+
+            dispatch({ type: 'SET_DETAIL_MOVIE', payload: data });
+
+            const movie = {
+                ...data,
+                userId: loggedUser.username,
+                id: data.id.toString(),
+            };
+            // insert on dynamodb the movie.
+            try {
+                await Axios.post(
+                    'https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies',
+                    movie,
+                    {
+                        headers: {
+                            Authorization: `${currentSession.idToken.jwtToken}`,
+                        },
+                    }
+                );
+            } catch (e) {
+                console.log(e);
+            }
         }
     };
+    const goToImdb = (imdb_link) => {
+        window.location.href = imdb_link;
+    };
+
     useEffect(() => {
-        if (location.state) {
-            dispatch({ type: 'SET_DETAIL_MOVIE', payload: location.state });
-        } else {
-            getMovie(match.params.id);
-        }
+        getMovie(match.params.id);
     }, []);
 
     return (
         <div>
             <div className={classes.root}>
                 <Paper className={classes.paper}>
-                    <Grid container spacing={2}>
-                        <Grid item>
-                            <ButtonBase className={classes.image}>
-                                <img
-                                    className={classes.img}
-                                    alt="complex"
-                                    src={
-                                        movieDetail ? movieDetail.imageUrl : ''
+                    {loader && <CircularProgress className={classes.loader} />}
+                    {!loader && (
+                        <Grid container>
+                            <Grid item xs={12} sm={3}>
+                                <ButtonBase className={classes.image}>
+                                    <img
+                                        className={classes.img}
+                                        alt="complex"
+                                        src={
+                                            movieDetail
+                                                ? `http://image.tmdb.org/t/p/w185/${movieDetail.poster_path}`
+                                                : ''
+                                        }
+                                    />
+                                </ButtonBase>
+                            </Grid>
+                            <Grid item xs={12} sm={9}>
+                                <Typography gutterBottom variant="subtitle1">
+                                    Title:{' '}
+                                    {movieDetail ? movieDetail.title : ''}
+                                </Typography>
+                                <Typography variant="subtitle1">
+                                    {movieDetail
+                                        ? movieDetail.release_date
+                                        : ''}
+                                </Typography>
+                                <Typography
+                                    variant="body2"
+                                    color="textSecondary"
+                                >
+                                    Synopsis:{' '}
+                                    {movieDetail ? movieDetail.overview : ''}
+                                </Typography>
+                                <IMDB
+                                    className={classes.imdb}
+                                    onClick={() =>
+                                        goToImdb(
+                                            `https://www.imdb.com/title/${movieDetail.imdb_id}`
+                                        )
                                     }
                                 />
-                            </ButtonBase>
-                        </Grid>
-                        <Grid item xs={12} sm container>
-                            <Grid
-                                item
-                                xs
-                                container
-                                direction="column"
-                                spacing={2}
-                            >
-                                <Grid item xs>
-                                    <Typography
-                                        gutterBottom
-                                        variant="subtitle1"
-                                    >
-                                        Title:{' '}
-                                        {movieDetail ? movieDetail.title : ''}
-                                    </Typography>
-                                    <Typography variant="body2" gutterBottom>
-                                        Director:{' '}
-                                        {movieDetail
-                                            ? movieDetail.director
-                                            : ''}
-                                    </Typography>
-                                    <Typography
-                                        variant="body2"
-                                        color="textSecondary"
-                                    >
-                                        Synopsis:{' '}
-                                        {movieDetail
-                                            ? movieDetail.description
-                                            : ''}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                            <Grid item>
-                                <Typography variant="subtitle1">
-                                    {movieDetail ? movieDetail.year : ''}
-                                </Typography>
                             </Grid>
                         </Grid>
-                    </Grid>
+                    )}
                 </Paper>
 
                 <CommentsSection movie={movieDetail} />
