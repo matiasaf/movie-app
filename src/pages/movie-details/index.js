@@ -56,9 +56,9 @@ const useStyles = makeStyles((theme) => ({
         width: 50,
     },
     loader: {
-        marginLeft: '48%',
         marginTop: theme.spacing(4),
         marginBottom: theme.spacing(4),
+        textAlign: 'center',
     },
 }));
 
@@ -126,7 +126,12 @@ export default function MovieDetailsPage({ location, match }) {
         <div>
             <div className={classes.root}>
                 <Paper className={classes.paper}>
-                    {loader && <CircularProgress className={classes.loader} />}
+                    {!loader && (
+                        <div className={classes.loader}>
+                            {' '}
+                            <CircularProgress />{' '}
+                        </div>
+                    )}
                     {!loader && (
                         <Grid container>
                             <Grid item xs={12} sm={3}>
