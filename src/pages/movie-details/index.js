@@ -166,8 +166,8 @@ export default function MovieDetailsPage({ location, match }) {
                         </Grid>
                     )}
                 </Paper>
-
-                <CommentsSection movie={movieDetail} />
+                
+                {!loader && <CommentsSection movie={movieDetail} />}
             </div>
         </div>
     );
