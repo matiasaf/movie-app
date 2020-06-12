@@ -126,7 +126,7 @@ export default function MovieDetailsPage({ location, match }) {
         <div>
             <div className={classes.root}>
                 <Paper className={classes.paper}>
-                    {!loader && (
+                    {loader && (
                         <div className={classes.loader}>
                             {' '}
                             <CircularProgress />{' '}
