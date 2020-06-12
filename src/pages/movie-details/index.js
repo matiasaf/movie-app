@@ -55,6 +55,11 @@ const useStyles = makeStyles((theme) => ({
         height: 40,
         width: 50,
     },
+    loader: {
+        marginLeft: '48%',
+        marginTop: theme.spacing(4),
+        marginBottom: theme.spacing(4),
+    },
 }));
 
 export default function MovieDetailsPage({ location, match }) {
@@ -166,7 +171,7 @@ export default function MovieDetailsPage({ location, match }) {
                         </Grid>
                     )}
                 </Paper>
-                
+
                 {!loader && <CommentsSection movie={movieDetail} />}
             </div>
         </div>
