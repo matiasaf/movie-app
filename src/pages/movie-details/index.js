@@ -135,7 +135,8 @@ export default function MovieDetailsPage({ location, match }) {
     };
 
     const goToFA = (fa_link) => {
-        window.location.href = fa_link;
+        // window.location.href = fa_link;
+        window.open(fa_link, '_blank');
     };
 
     const addFilmaffinityId = async ({ fa_id }) => {
