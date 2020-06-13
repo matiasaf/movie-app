@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import Axios from 'axios';
-import { MovieFilter } from '@material-ui/icons';
+import { Stars } from '@material-ui/icons';
 
 import { CTX } from '../../Store';
 
-import MovieCard from '../moviecard';
+import MovieCard from '../../components/moviecard';
 import './index.css';
 
 import { CircularProgress, TextField, Button, Grid } from '@material-ui/core';
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function ListPopularMovies() {
+export default function TopRatedMovies() {
     const classes = useStyles();
     const { register, errors, handleSubmit } = useForm();
 
@@ -57,7 +57,7 @@ export default function ListPopularMovies() {
 
     const getMoviesFromAPI = async () => {
         const { data } = await Axios.get(
-            `${config.themovieDB.API_URL}/movie/popular${config.themovieDB.API_KEY}`
+            `${config.themovieDB.API_URL}/movie/top_rated${config.themovieDB.API_KEY}`
         );
         console.log(data);
         dispatch({ type: 'SET_MOVIES', payload: data.results });
@@ -76,7 +76,7 @@ export default function ListPopularMovies() {
     const fetchMoreMovies = async () => {
         let _page = page + 1;
         const { data } = await Axios.get(
-            `${config.themovieDB.API_URL}/movie/popular${config.themovieDB.API_KEY}&page=${_page}`
+            `${config.themovieDB.API_URL}/movie/top_rated${config.themovieDB.API_KEY}&page=${_page}`
         );
         dispatch({ type: 'ADD_MOVIES', payload: data.results });
         setPage(_page);
@@ -91,10 +91,10 @@ export default function ListPopularMovies() {
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
-                    <MovieFilter />
+                    <Stars />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Most Popular Movies
+                    Top Rated Movies
                 </Typography>
                 <form
                     className={classes.search}

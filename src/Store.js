@@ -31,13 +31,15 @@ function reducer(state, action) {
                 ...state,
                 movieDetail: {
                     ...state.movieDetail,
-                    comments: [...state.movieDetail.comments, action.payload],
+                    comments: state.movieDetail.comments
+                        ? [...state.movieDetail.comments, action.payload]
+                        : [action.payload],
                 },
             };
         case 'ADD_MOVIES':
             return {
                 ...state,
-                movies: [...state.movies, ...action.payload]
+                movies: [...state.movies, ...action.payload],
             };
 
         default:

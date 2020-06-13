@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'auto',
         maxHeight: 300,
         marginBottom: theme.spacing(12),
-    }
+    },
 }));
 
 export default function AddComment({ movieId }) {
@@ -23,15 +23,16 @@ export default function AddComment({ movieId }) {
     const classes = useStyles();
 
     const addComment = async ({ text }) => {
+        const user = await Auth.currentAuthenticatedUser();
+
         const data = {
-            commentText: text,
-            movieId: movieId,
+            commentText: text
         };
-        
+
         dispatch({ type: 'ADD_COMMENT', payload: { text: text } });
-        
+
         const currentSession = await Auth.currentSession();
-        
+
         if (currentSession) {
             const { res } = await Axios.patch(
                 `${config.apiGateway.URL}/movie/comment/${movieId}`,

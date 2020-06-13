@@ -10,6 +10,8 @@ import IconButton from '@material-ui/core/IconButton';
 import Favorite from '@material-ui/icons/Favorite';
 import Visibility from '@material-ui/icons/Visibility';
 import MoreIcon from '@material-ui/icons/MoreVert';
+import MovieFilter from '@material-ui/icons/MovieFilter';
+import Stars from '@material-ui/icons/Stars';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
 import { Menu, MenuItem } from '@material-ui/core';
@@ -80,7 +82,7 @@ const useStyles = makeStyles((theme) => ({
                 width: '20ch',
             },
         },
-    }
+    },
 }));
 
 export default function BottomAppBar() {
@@ -98,6 +100,14 @@ export default function BottomAppBar() {
     };
 
     const goToFavsMovies = () => {
+        history.push('/fav-movies');
+    };
+
+    const goToTopRatedMovies = () => {
+        history.push('/top-rated');
+    };
+
+    const goToMostPopularMovies = () => {
         history.push('/popular');
     };
 
@@ -117,6 +127,23 @@ export default function BottomAppBar() {
 
             <AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={() => goToMostPopularMovies()}
+                    >
+                        <MovieFilter />
+                    </IconButton>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="open drawer"
+                        onClick={() => goToTopRatedMovies()}
+                    >
+                        <Stars />
+                    </IconButton>
+
                     <div className={classes.grow} />
                     <IconButton
                         edge="start"
@@ -136,7 +163,6 @@ export default function BottomAppBar() {
                         <Visibility />
                     </IconButton>
 
-                    
                     <IconButton
                         edge="end"
                         color="inherit"

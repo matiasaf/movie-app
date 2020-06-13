@@ -86,9 +86,10 @@ export default function MovieDetailsPage({ location, match }) {
 
         // first check if the movie exist on dynamodb
         const currentSession = await Auth.currentSession();
+        const user = await Auth.currentAuthenticatedUser();
         try {
             const { data } = await Axios.get(
-                `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movie/${id}`,
+                `${config.apiGateway.URL}/movie/${id + user.username}`,
                 {
                     headers: {
                         Authorization: `${currentSession.idToken.jwtToken}`,
@@ -111,19 +112,15 @@ export default function MovieDetailsPage({ location, match }) {
             const movie = {
                 ...data,
                 userId: loggedUser.username,
-                id: data.id.toString(),
+                id: data.id + loggedUser.username,
             };
             // insert on dynamodb the movie.
             try {
-                await Axios.post(
-                    'https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies',
-                    movie,
-                    {
-                        headers: {
-                            Authorization: `${currentSession.idToken.jwtToken}`,
-                        },
-                    }
-                );
+                await Axios.post(`${config.apiGateway.URL}/movies`, movie, {
+                    headers: {
+                        Authorization: `${currentSession.idToken.jwtToken}`,
+                    },
+                });
             } catch (e) {
                 console.log(e);
             }

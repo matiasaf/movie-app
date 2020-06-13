@@ -17,6 +17,8 @@ import NewMoviePage from './pages/newmovie';
 import MovieDetailsPage from './pages/movie-details';
 import BottomAppBar from './components/bottom-nav-bar';
 import ListPopularMovies from './components/list-popular-movies';
+import TopRatedMovies from './pages/top-rated-movies';
+import ListFavMovies from './pages/list-fav-movies';
 
 function App() {
     const theme = createMuiTheme({
@@ -45,7 +47,10 @@ function App() {
                     <Switch>
                         <PrivateRoute path="/movies" component={ListMovies} />
                         <Route path="/popular" component={ListPopularMovies} />
-                        <Route path="/newmovie" component={NewMoviePage} />
+                        <Route path="/top-rated" component={TopRatedMovies} />
+                        
+                        <Route path="/fav-movies" component={ListFavMovies} />
+                        
                         <Route exact path="/movie-details/:id" component={MovieDetailsPage} />
 
                         <Route path="/login">
