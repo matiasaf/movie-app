@@ -6,13 +6,17 @@ import {
     Grid,
     ButtonBase,
     CircularProgress,
+    TextField,
+    Button,
 } from '@material-ui/core';
 import Axios from 'axios';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
 import CommentsSection from '../../components/comments-section';
 import { ReactComponent as IMDB } from './imdb-logo.svg';
+import { ReactComponent as FAIcon } from './fa-icon.svg';
 import config from '../../config';
+import { useForm } from 'react-hook-form';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -55,16 +59,27 @@ const useStyles = makeStyles((theme) => ({
         height: 40,
         width: 50,
     },
+    fa_icon: {
+        height: 30,
+        width: 50,
+    },
     loader: {
         marginTop: theme.spacing(4),
         marginBottom: theme.spacing(4),
         textAlign: 'center',
+    },
+    form: {
+        width: 200,
+    },
+    submit: {
+        marginTop: theme.spacing(3),
     },
 }));
 
 export default function MovieDetailsPage({ location, match }) {
     const [{ loader, loggedUser, movieDetail }, dispatch] = useContext(CTX);
     const classes = useStyles();
+    const { register, errors, handleSubmit } = useForm();
 
     const getMovie = async (id) => {
         dispatch({ type: 'LOADER_ON' });
@@ -114,8 +129,36 @@ export default function MovieDetailsPage({ location, match }) {
             }
         }
     };
+
     const goToImdb = (imdb_link) => {
         window.location.href = imdb_link;
+    };
+
+    const goToFA = (fa_link) => {
+        window.location.href = fa_link;
+    };
+
+    const addFilmaffinityId = async ({ fa_id }) => {
+        const currentSession = await Auth.currentSession();
+
+        dispatch({
+            type: 'SET_DETAIL_MOVIE',
+            payload: { ...movieDetail, fa_id: fa_id },
+        });
+
+        const data = { fa_id: fa_id };
+
+        if (currentSession) {
+            const { res } = await Axios.patch(
+                `${config.apiGateway.URL}/movie/add_fa_id/${movieDetail.id}`,
+                data,
+                {
+                    headers: {
+                        Authorization: `${currentSession.idToken.jwtToken}`,
+                    },
+                }
+            );
+        }
     };
 
     useEffect(() => {
@@ -172,6 +215,48 @@ export default function MovieDetailsPage({ location, match }) {
                                         )
                                     }
                                 />
+                                {movieDetail.fa_id && (
+                                    <FAIcon
+                                        className={classes.fa_icon}
+                                        onClick={() =>
+                                            goToFA(
+                                                `https://www.filmaffinity.com/es/film${movieDetail.fa_id}.html`
+                                            )
+                                        }
+                                    />
+                                )}
+                                {!movieDetail.fa_id && (
+                                    <form
+                                        className={classes.form}
+                                        onSubmit={handleSubmit((data) =>
+                                            addFilmaffinityId(data)
+                                        )}
+                                    >
+                                        <Grid container spacing={1}>
+                                            <Grid item xs={8}>
+                                                <TextField
+                                                    variant="outlined"
+                                                    margin="normal"
+                                                    label="Filmaffinity Id"
+                                                    inputRef={register}
+                                                    name="fa_id"
+                                                    autoComplete="Filmaffinity Id"
+                                                />
+                                            </Grid>
+                                            <Grid item xs={4}>
+                                                <Button
+                                                    type="submit"
+                                                    variant="contained"
+                                                    fullWidth
+                                                    color="primary"
+                                                    className={classes.submit}
+                                                >
+                                                    +
+                                                </Button>{' '}
+                                            </Grid>
+                                        </Grid>
+                                    </form>
+                                )}
                             </Grid>
                         </Grid>
                     )}

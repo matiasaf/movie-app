@@ -78,7 +78,6 @@ export default function ListPopularMovies() {
     };
 
     const searchForMovie = async ({ title }) => {
-        console.log(title);
         if (title) {
             dispatch({ type: 'LOADER_ON' });
             const { data } = await Axios.get(
