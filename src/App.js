@@ -13,7 +13,6 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { CTX } from './Store';
 import ListMovies from './components/listmovies';
 import PrivateRoute from './components/private-route';
-import NewMoviePage from './pages/newmovie';
 import MovieDetailsPage from './pages/movie-details';
 import BottomAppBar from './components/bottom-nav-bar';
 import ListPopularMovies from './components/list-popular-movies';
