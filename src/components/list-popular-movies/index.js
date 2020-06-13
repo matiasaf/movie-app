@@ -112,7 +112,6 @@ export default function ListPopularMovies() {
                                 inputRef={register}
                                 name="title"
                                 autoComplete="Title"
-                                autoFocus
                             />
                         </Grid>
                         <Grid item xs={4}>
