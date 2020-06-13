@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Auth } from 'aws-amplify';
 import Axios from 'axios';
 import { MovieFilter } from '@material-ui/icons';
@@ -17,6 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import config from '../../config';
 import { useForm } from 'react-hook-form';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -52,22 +53,7 @@ export default function ListPopularMovies() {
     const { register, errors, handleSubmit } = useForm();
 
     const [{ movies, loggedUser, loader }, dispatch] = useContext(CTX);
-
-    const getMovies = async () => {
-        dispatch({ type: 'LOADER_ON' });
-        const currentSession = await Auth.currentSession();
-        if (currentSession) {
-            const { data } = await Axios.get(
-                `https://wjaf9crgh2.execute-api.us-east-2.amazonaws.com/dev/movies/${loggedUser.username}`,
-                {
-                    headers: {
-                        Authorization: `${currentSession.idToken.jwtToken}`,
-                    },
-                }
-            );
-            dispatch({ type: 'SET_MOVIES', payload: data });
-        }
-    };
+    const [page, setPage] = useState(1);
 
     const getMoviesFromAPI = async () => {
         const { data } = await Axios.get(
@@ -87,6 +73,15 @@ export default function ListPopularMovies() {
         }
     };
 
+    const fetchMoreMovies = async () => {
+        let _page = page + 1;
+        const { data } = await Axios.get(
+            `${config.themovieDB.API_URL}/movie/popular${config.themovieDB.API_KEY}&page=${_page}`
+        );
+        dispatch({ type: 'ADD_MOVIES', payload: data.results });
+        setPage(_page);
+    };
+
     useEffect(() => {
         getMoviesFromAPI();
     }, []);
@@ -101,7 +96,10 @@ export default function ListPopularMovies() {
                 <Typography component="h1" variant="h5">
                     Most Popular Movies
                 </Typography>
-                <form className={classes.search} onSubmit={handleSubmit((data) => searchForMovie(data))}>
+                <form
+                    className={classes.search}
+                    onSubmit={handleSubmit((data) => searchForMovie(data))}
+                >
                     <Grid container spacing={1}>
                         <Grid item xs={8}>
                             <TextField
@@ -129,22 +127,38 @@ export default function ListPopularMovies() {
                 </form>
                 {loader && <CircularProgress className={classes.loader} />}
 
-                {!loader && movies.length === 0 && (
-                    <Typography
-                        component="h1"
-                        variant="h5"
-                        className={classes.empty}
-                    >
-                        Not favourites movies yet.
-                    </Typography>
-                )}
-                {movies && (
-                    <div className={classes.list}>
-                        {movies.map((movie) => (
-                            <MovieCard movie={movie} />
-                        ))}
-                    </div>
-                )}
+                <InfiniteScroll
+                    dataLength={movies.length} //This is important field to render the next data
+                    next={fetchMoreMovies}
+                    hasMore={true}
+                    loader={<CircularProgress className={classes.loader} />}
+                    endMessage={
+                        <p style={{ textAlign: 'center' }}>
+                            <b>Yay! You have seen it all</b>
+                        </p>
+                    }
+                    // below props only if you need pull down functionality
+                    // refreshFunction={this.refresh}
+                    // pullDownToRefresh
+                    // pullDownToRefreshContent={
+                    //     <h3 style={{ textAlign: 'center' }}>
+                    //         &#8595; Pull down to refresh
+                    //     </h3>
+                    // }
+                    // releaseToRefreshContent={
+                    //     <h3 style={{ textAlign: 'center' }}>
+                    //         &#8593; Release to refresh
+                    //     </h3>
+                    // }
+                >
+                    {movies && (
+                        <div className={classes.list}>
+                            {movies.map((movie) => (
+                                <MovieCard movie={movie} />
+                            ))}
+                        </div>
+                    )}
+                </InfiniteScroll>
             </div>
         </Container>
     );

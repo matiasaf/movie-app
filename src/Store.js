@@ -34,6 +34,11 @@ function reducer(state, action) {
                     comments: [...state.movieDetail.comments, action.payload],
                 },
             };
+        case 'ADD_MOVIES':
+            return {
+                ...state,
+                movies: [...state.movies, ...action.payload]
+            };
 
         default:
             return state;
