@@ -1,4 +1,7 @@
 import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import Axios from 'axios';
+import { Auth } from 'aws-amplify';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
@@ -7,12 +10,9 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
 import Favorite from '@material-ui/icons/Favorite';
-import { useHistory } from 'react-router-dom';
-import { StarRate } from '@material-ui/icons';
-import { yellow } from '@material-ui/core/colors';
+import { StarRate, Visibility } from '@material-ui/icons';
+
 import { CTX } from '../../Store';
-import Axios from 'axios';
-import { Auth } from 'aws-amplify';
 import config from '../../config';
 
 const useStyles = makeStyles((theme) => ({
@@ -60,24 +60,43 @@ export default function MovieCard({ movie }) {
     let history = useHistory();
 
     const openMovieDetails = () => {
-        let id = movie.id;
-        if (isNaN(id)) {
-            id = id.replace(loggedUser.username, '');
-        }
+        const id = isNaN(movie.id)
+            ? (movie.id).replace(loggedUser.username, '')
+            : movie.id;
+
         history.push(`/movie-details/${id}`, movie);
     };
     const addFavourite = async () => {
+        const id = !isNaN(movie.id) ? id + loggedUser.username : movie.id;
         const _movie = {
             ...movie,
             userId: loggedUser.username,
-            id: movie.id + loggedUser.username,
+            id: id,
         };
         const currentSession = await Auth.currentSession();
         if (currentSession) {
             const { res } = await Axios.patch(
-                `${config.apiGateway.URL}/movie/favourite/${
-                    movie.id + loggedUser.username
-                }`,
+                `${config.apiGateway.URL}/movie/favourite/${id}`,
+                _movie,
+                {
+                    headers: {
+                        Authorization: `${currentSession.idToken.jwtToken}`,
+                    },
+                }
+            );
+        }
+    };
+    const addToWatch = async () => {
+        const id = !isNaN(movie.id) ? id + loggedUser.username : movie.id;
+        const _movie = {
+            ...movie,
+            userId: loggedUser.username,
+            id: id,
+        };
+        const currentSession = await Auth.currentSession();
+        if (currentSession) {
+            const { res } = await Axios.patch(
+                `${config.apiGateway.URL}/movie/to-watch/${id}`,
                 _movie,
                 {
                     headers: {
@@ -107,6 +126,9 @@ export default function MovieCard({ movie }) {
                             <FavoriteBorder className={classes.favIcon} />
                         )}
                         {movie.is_fav && <Favorite className={classes.fav} />}
+                    </IconButton>
+                    <IconButton aria-label="fav" onClick={() => addToWatch()}>
+                        <Visibility className={classes.favIcon} />
                     </IconButton>
                 </div>
             </div>

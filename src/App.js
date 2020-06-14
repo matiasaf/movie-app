@@ -1,13 +1,11 @@
 import React, { useContext, useEffect } from 'react';
-import { Container, CircularProgress } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
-import Navbar from './components/navbar';
 import SignIn from './pages/signin';
 import Login from './pages/login';
 
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { CTX } from './Store';
@@ -18,6 +16,7 @@ import BottomAppBar from './components/bottom-nav-bar';
 import ListPopularMovies from './components/list-popular-movies';
 import TopRatedMovies from './pages/top-rated-movies';
 import ListFavMovies from './pages/list-fav-movies';
+import ToWatchMovies from './pages/to-watch-movies';
 
 function App() {
     const theme = createMuiTheme({
@@ -25,7 +24,7 @@ function App() {
             type: 'dark',
         },
     });
-    const [{ loggedUser }, dispatch] = useContext(CTX);
+    const [{}, dispatch] = useContext(CTX);
 
     const checkAuth = async () => {
         const currentSession = await Auth.currentAuthenticatedUser();
@@ -47,10 +46,15 @@ function App() {
                         <PrivateRoute path="/movies" component={ListMovies} />
                         <Route path="/popular" component={ListPopularMovies} />
                         <Route path="/top-rated" component={TopRatedMovies} />
-                        
+
                         <Route path="/fav-movies" component={ListFavMovies} />
-                        
-                        <Route exact path="/movie-details/:id" component={MovieDetailsPage} />
+                        <Route path="/to-watch" component={ToWatchMovies} />
+
+                        <Route
+                            exact
+                            path="/movie-details/:id"
+                            component={MovieDetailsPage}
+                        />
 
                         <Route path="/login">
                             <Login />

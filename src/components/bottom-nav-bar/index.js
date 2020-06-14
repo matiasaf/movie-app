@@ -103,6 +103,10 @@ export default function BottomAppBar() {
         history.push('/fav-movies');
     };
 
+    const goToWatchMovies = () => {
+        history.push('/to-watch');
+    };
+
     const goToTopRatedMovies = () => {
         history.push('/top-rated');
     };
@@ -158,7 +162,7 @@ export default function BottomAppBar() {
                         color="inherit"
                         aria-label="open drawer"
                         className={classes.eye}
-                        onClick={() => goToFavsMovies()}
+                        onClick={() => goToWatchMovies()}
                     >
                         <Visibility />
                     </IconButton>
