@@ -4,7 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+
 ## [Unreleased]
+
+## [0.1.1]
+- Add the search functionality based on text inside thats pdf's saved on s3 bucket.
+
+## [0.1.0]
+- Add the functionality to upload a pdf (script) of a movie.
+- Add the 'lasted scripts loaded' page to show the last movies which has a script.
 
 ## [0.0.3]
 - Integrate the moviedb API.
@@ -14,8 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Adding the search by name on movies.
 - Correct for display the correct information comming from the moviedb API.
 - Distinguish between movies to watch or favorites.
-- (ADD A MOVIE) Change the icon on adding a movie.
-- (ADD A MOVIE) Adding the description (synopsis) field.
 
 ## [Released]
 
