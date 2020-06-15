@@ -56,6 +56,7 @@ export default function ListFavMovies() {
     const [page, setPage] = useState(1);
 
     const getFavsMovies = async () => {
+        dispatch({ type: 'LOADER_ON' });
         const user = await Auth.currentAuthenticatedUser();
         const { data } = await Axios.get(`${config.apiGateway.URL}/movies/fav/${user.username}`);
         console.log(data);

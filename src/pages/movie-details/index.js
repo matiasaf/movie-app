@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import {
     Paper,
     Typography,
@@ -9,6 +9,9 @@ import {
     TextField,
     Button,
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import { Visibility, FavoriteBorder, Favorite } from '@material-ui/icons';
+
 import Axios from 'axios';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
@@ -107,13 +110,14 @@ export default function MovieDetailsPage({ location, match }) {
                 }
             );
 
-            dispatch({ type: 'SET_DETAIL_MOVIE', payload: data });
-
             const movie = {
                 ...data,
                 userId: loggedUser.username,
                 id: data.id + loggedUser.username,
             };
+
+            dispatch({ type: 'SET_DETAIL_MOVIE', payload: movie });
+
             // insert on dynamodb the movie.
             try {
                 await Axios.post(`${config.apiGateway.URL}/movies`, movie, {
@@ -159,6 +163,35 @@ export default function MovieDetailsPage({ location, match }) {
         }
     };
 
+    const addFavourite = async () => {
+        const currentSession = await Auth.currentSession();
+        if (currentSession) {
+            const { res } = await Axios.patch(
+                `${config.apiGateway.URL}/movie/favourite/${movieDetail.id}`,
+                movieDetail,
+                {
+                    headers: {
+                        Authorization: `${currentSession.idToken.jwtToken}`,
+                    },
+                }
+            );
+        }
+    };
+    const addToWatch = async () => {
+        const currentSession = await Auth.currentSession();
+        if (currentSession) {
+            const { res } = await Axios.patch(
+                `${config.apiGateway.URL}/movie/to-watch/${movieDetail.id}`,
+                movieDetail,
+                {
+                    headers: {
+                        Authorization: `${currentSession.idToken.jwtToken}`,
+                    },
+                }
+            );
+        }
+    };
+
     useEffect(() => {
         getMovie(match.params.id);
     }, []);
@@ -189,6 +222,25 @@ export default function MovieDetailsPage({ location, match }) {
                                 </ButtonBase>
                             </Grid>
                             <Grid item xs={12} sm={9}>
+                                <IconButton
+                                    aria-label="fav"
+                                    onClick={() => addFavourite()}
+                                >
+                                    {!movieDetail.is_fav && (
+                                        <FavoriteBorder
+                                            className={classes.favIcon}
+                                        />
+                                    )}
+                                    {movieDetail.is_fav && (
+                                        <Favorite className={classes.fav} />
+                                    )}
+                                </IconButton>
+                                <IconButton
+                                    aria-label="fav"
+                                    onClick={() => addToWatch()}
+                                >
+                                    <Visibility className={classes.favIcon} />
+                                </IconButton>
                                 <Typography gutterBottom variant="subtitle1">
                                     Title:{' '}
                                     {movieDetail ? movieDetail.title : ''}

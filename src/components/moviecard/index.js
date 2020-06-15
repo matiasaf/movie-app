@@ -6,11 +6,8 @@ import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
-import FavoriteBorder from '@material-ui/icons/FavoriteBorder';
-import Favorite from '@material-ui/icons/Favorite';
-import { StarRate, Visibility } from '@material-ui/icons';
+import { StarRate } from '@material-ui/icons';
 
 import { CTX } from '../../Store';
 import config from '../../config';
@@ -66,46 +63,7 @@ export default function MovieCard({ movie }) {
 
         history.push(`/movie-details/${id}`, movie);
     };
-    const addFavourite = async () => {
-        const id = !isNaN(movie.id) ? id + loggedUser.username : movie.id;
-        const _movie = {
-            ...movie,
-            userId: loggedUser.username,
-            id: id,
-        };
-        const currentSession = await Auth.currentSession();
-        if (currentSession) {
-            const { res } = await Axios.patch(
-                `${config.apiGateway.URL}/movie/favourite/${id}`,
-                _movie,
-                {
-                    headers: {
-                        Authorization: `${currentSession.idToken.jwtToken}`,
-                    },
-                }
-            );
-        }
-    };
-    const addToWatch = async () => {
-        const id = !isNaN(movie.id) ? id + loggedUser.username : movie.id;
-        const _movie = {
-            ...movie,
-            userId: loggedUser.username,
-            id: id,
-        };
-        const currentSession = await Auth.currentSession();
-        if (currentSession) {
-            const { res } = await Axios.patch(
-                `${config.apiGateway.URL}/movie/to-watch/${id}`,
-                _movie,
-                {
-                    headers: {
-                        Authorization: `${currentSession.idToken.jwtToken}`,
-                    },
-                }
-            );
-        }
-    };
+    
 
     return (
         <Card className={classes.root}>
@@ -121,7 +79,7 @@ export default function MovieCard({ movie }) {
                     </Typography>
                 </CardContent>
                 <div className={classes.controls}>
-                    <IconButton aria-label="fav" onClick={() => addFavourite()}>
+                    {/* <IconButton aria-label="fav" onClick={() => addFavourite()}>
                         {!movie.is_fav && (
                             <FavoriteBorder className={classes.favIcon} />
                         )}
@@ -129,7 +87,7 @@ export default function MovieCard({ movie }) {
                     </IconButton>
                     <IconButton aria-label="fav" onClick={() => addToWatch()}>
                         <Visibility className={classes.favIcon} />
-                    </IconButton>
+                    </IconButton> */}
                 </div>
             </div>
             <CardMedia

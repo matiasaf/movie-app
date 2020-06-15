@@ -51,6 +51,7 @@ export default function ToWatchMovies() {
     const [{ movies, loader }, dispatch] = useContext(CTX);
 
     const getToWatchMovies = async () => {
+        dispatch({ type: 'LOADER_ON' });
         const user = await Auth.currentAuthenticatedUser();
         const { data } = await Axios.get(
             `${config.apiGateway.URL}/movies/to-watch/${user.username}`
