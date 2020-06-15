@@ -10,7 +10,12 @@ import {
     Button,
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
-import { Visibility, FavoriteBorder, Favorite } from '@material-ui/icons';
+import {
+    Visibility,
+    VisibilityOff,
+    FavoriteBorder,
+    Favorite,
+} from '@material-ui/icons';
 
 import Axios from 'axios';
 import { CTX } from '../../Store';
@@ -76,6 +81,9 @@ const useStyles = makeStyles((theme) => ({
     },
     submit: {
         marginTop: theme.spacing(3),
+    },
+    fav: {
+        color: 'red',
     },
 }));
 
@@ -164,11 +172,16 @@ export default function MovieDetailsPage({ location, match }) {
     };
 
     const addFavourite = async () => {
+        const movie = { ...movieDetail, is_fav: !movieDetail.is_fav };
+        dispatch({
+            type: 'SET_DETAIL_MOVIE',
+            payload: movie,
+        });
         const currentSession = await Auth.currentSession();
         if (currentSession) {
             const { res } = await Axios.patch(
                 `${config.apiGateway.URL}/movie/favourite/${movieDetail.id}`,
-                movieDetail,
+                movie,
                 {
                     headers: {
                         Authorization: `${currentSession.idToken.jwtToken}`,
@@ -178,11 +191,16 @@ export default function MovieDetailsPage({ location, match }) {
         }
     };
     const addToWatch = async () => {
+        const movie = { ...movieDetail, setToWatch: !movieDetail.setToWatch };
+        dispatch({
+            type: 'SET_DETAIL_MOVIE',
+            payload: movie,
+        });
         const currentSession = await Auth.currentSession();
         if (currentSession) {
             const { res } = await Axios.patch(
                 `${config.apiGateway.URL}/movie/to-watch/${movieDetail.id}`,
-                movieDetail,
+                movie,
                 {
                     headers: {
                         Authorization: `${currentSession.idToken.jwtToken}`,
@@ -239,7 +257,11 @@ export default function MovieDetailsPage({ location, match }) {
                                     aria-label="fav"
                                     onClick={() => addToWatch()}
                                 >
-                                    <Visibility className={classes.favIcon} />
+                                    {!movieDetail.setToWatch && <Visibility />}
+
+                                    {movieDetail.setToWatch && (
+                                        <VisibilityOff />
+                                    )}
                                 </IconButton>
                                 <Typography gutterBottom variant="subtitle1">
                                     Title:{' '}
