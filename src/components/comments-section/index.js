@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
     List,
     ListSubheader,
     ListItem,
     ListItemText,
     makeStyles,
+    Button,
 } from '@material-ui/core';
 import AddComment from '../add-comment';
+import { CTX } from '../../Store';
+import { deleteComment } from '../../services/Comments';
 
 const useStyles = makeStyles((theme) => ({
     rootComments: {
@@ -27,8 +30,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CommentsSection({ movie }) {
+    const [{}, dispatch] = useContext(CTX);
     const classes = useStyles();
     const { comments, id } = movie;
+
+    const _delete = async (commentId) => {
+        await deleteComment(dispatch, commentId, movie.id);
+    };
     return (
         <div>
             <List className={classes.rootComments} subheader={<li />}>
@@ -39,6 +47,9 @@ export default function CommentsSection({ movie }) {
                             comments.map((item) => (
                                 <ListItem key={`item-${item.id}`}>
                                     <ListItemText primary={`${item.text}`} />
+                                    <Button onClick={() => _delete(item.id)}>
+                                        x
+                                    </Button>
                                 </ListItem>
                             ))}
                     </ul>

@@ -36,6 +36,16 @@ function reducer(state, action) {
                         : [action.payload],
                 },
             };
+        case 'REMOVE_COMMENT':
+            return {
+                ...state,
+                movieDetail: {
+                    ...state.movieDetail,
+                    comments: state.movieDetail.comments.filter(
+                        (item) => item.id != action.payload
+                    ),
+                },
+            };
         case 'ADD_MOVIES':
             return {
                 ...state,

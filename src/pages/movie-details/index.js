@@ -17,6 +17,7 @@ import {
     Favorite,
 } from '@material-ui/icons';
 
+import { useForm } from 'react-hook-form';
 import Axios from 'axios';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
@@ -24,7 +25,7 @@ import CommentsSection from '../../components/comments-section';
 import { ReactComponent as IMDB } from './imdb-logo.svg';
 import { ReactComponent as FAIcon } from './fa-icon.svg';
 import config from '../../config';
-import { useForm } from 'react-hook-form';
+import { addFilmaffinityId } from '../../services/Movies';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -148,27 +149,8 @@ export default function MovieDetailsPage({ location, match }) {
         window.open(fa_link, '_blank');
     };
 
-    const addFilmaffinityId = async ({ fa_id }) => {
-        const currentSession = await Auth.currentSession();
-
-        dispatch({
-            type: 'SET_DETAIL_MOVIE',
-            payload: { ...movieDetail, fa_id: fa_id },
-        });
-
-        const data = { fa_id: fa_id };
-
-        if (currentSession) {
-            const { res } = await Axios.patch(
-                `${config.apiGateway.URL}/movie/add_fa_id/${movieDetail.id}`,
-                data,
-                {
-                    headers: {
-                        Authorization: `${currentSession.idToken.jwtToken}`,
-                    },
-                }
-            );
-        }
+    const _addFilmaffinityId = async ({ fa_id }) => {
+        await addFilmaffinityId(dispatch, movieDetail, fa_id);
     };
 
     const addFavourite = async () => {
@@ -301,7 +283,7 @@ export default function MovieDetailsPage({ location, match }) {
                                     <form
                                         className={classes.form}
                                         onSubmit={handleSubmit((data) =>
-                                            addFilmaffinityId(data)
+                                            _addFilmaffinityId(data)
                                         )}
                                     >
                                         <Grid container spacing={1}>
