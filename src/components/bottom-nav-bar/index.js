@@ -15,6 +15,7 @@ import Stars from '@material-ui/icons/Stars';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
 import { Menu, MenuItem } from '@material-ui/core';
+import SimpleBottomNavigation from './bottom-nav';
 
 const useStyles = makeStyles((theme) => ({
     text: {
@@ -131,7 +132,7 @@ export default function BottomAppBar() {
 
             <AppBar position="fixed" color="primary" className={classes.appBar}>
                 <Toolbar>
-                    <IconButton
+                    {/* <IconButton
                         edge="start"
                         color="inherit"
                         aria-label="open drawer"
@@ -146,10 +147,12 @@ export default function BottomAppBar() {
                         onClick={() => goToTopRatedMovies()}
                     >
                         <Stars />
-                    </IconButton>
+                    </IconButton> */}
+
+                    <SimpleBottomNavigation />
 
                     <div className={classes.grow} />
-                    <IconButton
+                    {/* <IconButton
                         edge="start"
                         color="inherit"
                         aria-label="open drawer"
@@ -165,7 +168,7 @@ export default function BottomAppBar() {
                         onClick={() => goToWatchMovies()}
                     >
                         <Visibility />
-                    </IconButton>
+                    </IconButton> */}
 
                     <IconButton
                         edge="end"

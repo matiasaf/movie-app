@@ -14,7 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add the functionality to upload a pdf (script) of a movie.
 - Add the 'lasted scripts loaded' page to show the last movies which has a script.
 - Delete comments on movies.
-
+- Add a better bottom nav bar.
+- Add the now playing movies page (https://api.themoviedb.org/3/movie/now_playing)
 
 ## [Released]
 
