@@ -194,14 +194,6 @@ export default function MovieDetailsPage({ location, match }) {
             );
         }
     };
-    // const castNameScript = (movieName) => {
-    //     const names = {
-    //         'The Godfather': 'Godfather',
-    //         '2001: A Space Odyssey': '2001-A-Space-Odyssey',
-    //         'Apocalypse Now': 'Apocalypse-Now',
-    //     };
-    //     return names[movieName] ? names[movieName] : movieName;
-    // };
 
     useEffect(() => {
         getMovie(match.params.id);
@@ -256,6 +248,15 @@ export default function MovieDetailsPage({ location, match }) {
                                         <VisibilityOff />
                                     )}
                                 </IconButton>
+                                {!loader && !showScript && (
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={() => setShowScript(true)}
+                                    >
+                                        Script
+                                    </Button>
+                                )}
                                 <Typography gutterBottom variant="subtitle1">
                                     Title:{' '}
                                     {movieDetail ? movieDetail.title : ''}
@@ -323,14 +324,6 @@ export default function MovieDetailsPage({ location, match }) {
                                     </form>
                                 )}
                             </Grid>
-                            {!loader && !showScript && (
-                                <Button
-                                    color="primary"
-                                    onClick={() => setShowScript(true)}
-                                >
-                                    Show Script
-                                </Button>
-                            )}
                         </Grid>
                     )}
                 </Paper>

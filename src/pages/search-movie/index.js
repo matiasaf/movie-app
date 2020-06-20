@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SearchMoviePage() {
+export default function SearchMoviePage({ location, match }) {
     const classes = useStyles();
     const { register, errors, handleSubmit } = useForm();
     const [{ movies, loggedUser, loader }, dispatch] = useContext(CTX);
@@ -56,11 +56,17 @@ export default function SearchMoviePage() {
             dispatch({ type: 'SET_MOVIES', payload: data.results });
         }
     };
-
-    useEffect(() => {
+    const checkMovieNameParam = async () => {
         dispatch({ type: 'LOADER_ON' });
         dispatch({ type: 'SET_MOVIES', payload: [] });
-    }, []);
+        if (match.params.movieName) {
+            await searchForMovie({ title: match.params.movieName });
+        }
+    };
+
+    useEffect(() => {
+        checkMovieNameParam();
+    }, [match.params.movieName]);
 
     return (
         <Container component="main" maxWidth="xs">

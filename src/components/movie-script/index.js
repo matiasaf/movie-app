@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Axios from 'axios';
 import { Auth } from 'aws-amplify';
-import { Grid, makeStyles } from '@material-ui/core';
+import { Grid, makeStyles, Container, CircularProgress } from '@material-ui/core';
 import './index.css';
 
-const useStyles = makeStyles((theme) => ({
-  
-}));
+const useStyles = makeStyles((theme) => ({}));
 
-export default function MovieScript({movieName}) {
+export default function MovieScript({ movieName, match }) {
     const [script, setScript] = useState('');
+    const [loader, setLoader] = useState(false);
     const classes = useStyles();
 
     const getScript = async (movieName) => {
+        setLoader(true);
         const currentSession = await Auth.currentSession();
         if (currentSession) {
             const { data } = await Axios.get(
@@ -24,19 +24,27 @@ export default function MovieScript({movieName}) {
                 }
             );
             setScript(data);
+            setLoader(false);
         }
     };
     useEffect(() => {
-        getScript(movieName);
-    }, []);
+        getScript(match.params.movieName);
+    }, [match.params.movieName]);
 
     return (
-        <Grid container>
-            <Grid item xs={12} sm={3}>
-                <div className="script-text">
-                    <pre dangerouslySetInnerHTML={{ __html: script }}></pre>
-                </div>
+        <Container maxWidth="sm">
+            <Grid container>
+                <Grid item xs={12} sm={12}>
+                    <div className="script-text">
+                        {loader && <CircularProgress className="loader" />}
+                        {!loader && (
+                            <pre
+                                dangerouslySetInnerHTML={{ __html: script }}
+                            ></pre>
+                        )}
+                    </div>
+                </Grid>
             </Grid>
-        </Grid>
+        </Container>
     );
 }

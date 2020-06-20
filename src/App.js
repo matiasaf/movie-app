@@ -59,8 +59,13 @@ function App() {
                             component={NowPlayingMovies}
                         />
                         <Route
-                            path="/search-movie"
+                            path="/search-movie/:movieName?"
                             component={SearchMoviePage}
+                        />
+
+                        <Route
+                            path="/movie-script/:movieName?"
+                            component={MovieScript}
                         />
 
                         <Route
