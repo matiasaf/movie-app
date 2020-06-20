@@ -27,6 +27,7 @@ import { ReactComponent as FAIcon } from './fa-icon.svg';
 import config from '../../config';
 import { addFilmaffinityId } from '../../services/Movies';
 import MovieScript from '../../components/movie-script';
+import fun from '../../shared/functions';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -193,14 +194,14 @@ export default function MovieDetailsPage({ location, match }) {
             );
         }
     };
-    const castNameScript = (movieName) => {
-        const names = {
-            'The Godfather': 'Godfather',
-            '2001: A Space Odyssey': '2001-A-Space-Odyssey',
-            'Apocalypse Now': 'Apocalypse-Now',
-        };
-        return names[movieName] ? names[movieName] : movieName;
-    };
+    // const castNameScript = (movieName) => {
+    //     const names = {
+    //         'The Godfather': 'Godfather',
+    //         '2001: A Space Odyssey': '2001-A-Space-Odyssey',
+    //         'Apocalypse Now': 'Apocalypse-Now',
+    //     };
+    //     return names[movieName] ? names[movieName] : movieName;
+    // };
 
     useEffect(() => {
         getMovie(match.params.id);
@@ -337,7 +338,7 @@ export default function MovieDetailsPage({ location, match }) {
 
                 {!loader && showScript && (
                     <MovieScript
-                        movieName={castNameScript(movieDetail.title)}
+                        movieName={fun.castNameScript(movieDetail.title)}
                     />
                 )}
             </div>

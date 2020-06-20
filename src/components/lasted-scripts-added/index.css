@@ -1,0 +1,8 @@
+.lasted-scripts {
+    /* text-align: center; */
+    /* width: 300px; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
