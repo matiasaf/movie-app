@@ -7,12 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.2]
+- Add the search functionality based on text inside the script text.
+
+
 ## [0.1.1]
-- Add the search functionality based on text inside thats pdf's saved on s3 bucket.
+- Add the 'lasted scripts loaded' page to show the last movies which has a script.
+- Add the search movie button on the bottomnavbar
 
 ## [0.1.0]
-- Add the functionality to upload a pdf (script) of a movie.
-- Add the 'lasted scripts loaded' page to show the last movies which has a script.
+- Adding more scripts to be mapped for searching the script.
+- Showing some movies scripts.
 - Delete comments on movies.
 - Add a better bottom nav bar.
 - Add the now playing movies page (https://api.themoviedb.org/3/movie/now_playing)
