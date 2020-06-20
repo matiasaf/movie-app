@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
     Paper,
     Typography,
@@ -26,6 +26,7 @@ import { ReactComponent as IMDB } from './imdb-logo.svg';
 import { ReactComponent as FAIcon } from './fa-icon.svg';
 import config from '../../config';
 import { addFilmaffinityId } from '../../services/Movies';
+import MovieScript from '../../components/movie-script';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -90,6 +91,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function MovieDetailsPage({ location, match }) {
     const [{ loader, loggedUser, movieDetail }, dispatch] = useContext(CTX);
+    const [showScript, setShowScript] = useState(false);
     const classes = useStyles();
     const { register, errors, handleSubmit } = useForm();
 
@@ -190,6 +192,14 @@ export default function MovieDetailsPage({ location, match }) {
                 }
             );
         }
+    };
+    const castNameScript = (movieName) => {
+        const names = {
+            'The Godfather': 'Godfather',
+            '2001: A Space Odyssey': '2001-A-Space-Odyssey',
+            'Apocalypse Now': 'Apocalypse-Now',
+        };
+        return names[movieName] ? names[movieName] : movieName;
     };
 
     useEffect(() => {
@@ -312,11 +322,24 @@ export default function MovieDetailsPage({ location, match }) {
                                     </form>
                                 )}
                             </Grid>
+                            {!loader && !showScript && (
+                                <Button
+                                    color="primary"
+                                    onClick={() => setShowScript(true)}
+                                >
+                                    Show Script
+                                </Button>
+                            )}
                         </Grid>
                     )}
                 </Paper>
-
                 {!loader && <CommentsSection movie={movieDetail} />}
+
+                {!loader && showScript && (
+                    <MovieScript
+                        movieName={castNameScript(movieDetail.title)}
+                    />
+                )}
             </div>
         </div>
     );
