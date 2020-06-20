@@ -96,35 +96,7 @@ export default function TopRatedMovies() {
                 <Typography component="h1" variant="h5">
                     Top Rated Movies
                 </Typography>
-                <form
-                    className={classes.search}
-                    onSubmit={handleSubmit((data) => searchForMovie(data))}
-                >
-                    <Grid container spacing={1}>
-                        <Grid item xs={8}>
-                            <TextField
-                                variant="outlined"
-                                margin="normal"
-                                required
-                                label="Title"
-                                inputRef={register}
-                                name="title"
-                                autoComplete="Title"
-                            />
-                        </Grid>
-                        <Grid item xs={4}>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                fullWidth
-                                color="primary"
-                                className={classes.submit}
-                            >
-                                Search
-                            </Button>{' '}
-                        </Grid>
-                    </Grid>
-                </form>
+
                 {loader && <CircularProgress className={classes.loader} />}
 
                 <InfiniteScroll

@@ -53,24 +53,16 @@ export default function ListFavMovies() {
     const { register, errors, handleSubmit } = useForm();
 
     const [{ movies, loggedUser, loader }, dispatch] = useContext(CTX);
-    const [page, setPage] = useState(1);
 
     const getFavsMovies = async () => {
         dispatch({ type: 'LOADER_ON' });
         const user = await Auth.currentAuthenticatedUser();
-        const { data } = await Axios.get(`${config.apiGateway.URL}/movies/fav/${user.username}`);
+        const { data } = await Axios.get(
+            `${config.apiGateway.URL}/movies/fav/${user.username}`
+        );
         console.log(data);
         dispatch({ type: 'SET_MOVIES', payload: data });
     };
-
-    // const fetchMoreMovies = async () => {
-    //     let _page = page + 1;
-    //     const { data } = await Axios.get(
-    //         `${config.themovieDB.API_URL}/movie/top_rated${config.themovieDB.API_KEY}&page=${_page}`
-    //     );
-    //     dispatch({ type: 'ADD_MOVIES', payload: data.results });
-    //     setPage(_page);
-    // };
 
     useEffect(() => {
         getFavsMovies();
@@ -89,17 +81,6 @@ export default function ListFavMovies() {
 
                 {loader && <CircularProgress className={classes.loader} />}
 
-                {/* <InfiniteScroll
-                    dataLength={movies.length} //This is important field to render the next data
-                    next={fetchMoreMovies}
-                    hasMore={true}
-                    loader={<CircularProgress className={classes.loader} />}
-                    endMessage={
-                        <p style={{ textAlign: 'center' }}>
-                            <b>Yay! You have seen it all</b>
-                        </p>
-                    }
-                > */}
                 {movies && (
                     <div className={classes.list}>
                         {movies.map((movie) => (
@@ -107,7 +88,6 @@ export default function ListFavMovies() {
                         ))}
                     </div>
                 )}
-                {/* </InfiniteScroll> */}
             </div>
         </Container>
     );

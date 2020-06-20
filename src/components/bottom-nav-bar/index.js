@@ -1,20 +1,16 @@
 import React, { useContext } from 'react';
 import { fade, makeStyles } from '@material-ui/core/styles';
 import { Link, useHistory } from 'react-router-dom';
-import matchSorter from 'match-sorter';
 
 import AppBar from '@material-ui/core/AppBar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Favorite from '@material-ui/icons/Favorite';
-import Visibility from '@material-ui/icons/Visibility';
+import SearchIcon from '@material-ui/icons/Search';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import MovieFilter from '@material-ui/icons/MovieFilter';
-import Stars from '@material-ui/icons/Stars';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem, Fab } from '@material-ui/core';
 import SimpleBottomNavigation from './bottom-nav';
 
 const useStyles = makeStyles((theme) => ({
@@ -120,6 +116,10 @@ export default function BottomAppBar() {
         history.push('/login');
     };
 
+    const goToSearchPage = () => {
+        history.push('/search-movie');
+    };
+
     const logout = async () => {
         await Auth.signOut();
         dispatch({ type: 'SET_AUTH_USER', payload: '' });
@@ -152,6 +152,15 @@ export default function BottomAppBar() {
                     <SimpleBottomNavigation />
 
                     <div className={classes.grow} />
+
+                    <Fab
+                        color="secondary"
+                        aria-label="add"
+                        className={classes.fabButton}
+                        onClick={() => goToSearchPage()}
+                    >
+                        <SearchIcon />
+                    </Fab>
                     {/* <IconButton
                         edge="start"
                         color="inherit"

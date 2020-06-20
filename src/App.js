@@ -19,6 +19,7 @@ import ListFavMovies from './pages/list-fav-movies';
 import ToWatchMovies from './pages/to-watch-movies';
 import NowPlayingMovies from './pages/now-playing-movies';
 import MovieScript from './components/movie-script';
+import SearchMoviePage from './pages/search-movie';
 
 function App() {
     const theme = createMuiTheme({
@@ -53,6 +54,7 @@ function App() {
                         <Route path="/to-watch" component={ToWatchMovies} />
                         <Route path="/now-playing" component={NowPlayingMovies} />
                         <Route path="/movie-script" component={MovieScript} />
+                        <Route path="/search-movie" component={SearchMoviePage} />
 
                         <Route
                             exact
