@@ -122,10 +122,20 @@ export default function MovieDetailsPage({ location, match }) {
                 }
             );
 
+            const res = await Axios.get(
+                `${config.apiGateway.URL}/movie/filmaffinity/${data.title}`,
+                {
+                    headers: {
+                        Authorization: `${currentSession.idToken.jwtToken}`,
+                    },
+                }
+            );
+
             const movie = {
                 ...data,
                 userId: loggedUser.username,
                 id: data.id + loggedUser.username,
+                fa_id: res.data,
             };
 
             dispatch({ type: 'SET_DETAIL_MOVIE', payload: movie });
