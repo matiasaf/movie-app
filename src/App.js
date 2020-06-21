@@ -46,7 +46,7 @@ function App() {
                 {/* <Navbar /> */}
                 <BottomAppBar />
                 <Container fixed>
-                    <LastedScriptsAdded />
+                    {/* <LastedScriptsAdded /> */}
                     <Switch>
                         <PrivateRoute path="/movies" component={ListMovies} />
                         <Route path="/popular" component={ListPopularMovies} />

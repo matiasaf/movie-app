@@ -28,6 +28,7 @@ import config from '../../config';
 import { addFilmaffinityId } from '../../services/Movies';
 import MovieScript from '../../components/movie-script';
 import fun from '../../shared/functions';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -95,6 +96,7 @@ export default function MovieDetailsPage({ location, match }) {
     const [showScript, setShowScript] = useState(false);
     const classes = useStyles();
     const { register, errors, handleSubmit } = useForm();
+    let history = useHistory();
 
     const getMovie = async (id) => {
         dispatch({ type: 'LOADER_ON' });
@@ -205,6 +207,10 @@ export default function MovieDetailsPage({ location, match }) {
         }
     };
 
+    const goToScriptPage = (movieTitle) => {
+        history.push(`/movie-script/${movieTitle}`);
+    };
+
     useEffect(() => {
         getMovie(match.params.id);
     }, []);
@@ -262,7 +268,9 @@ export default function MovieDetailsPage({ location, match }) {
                                     <Button
                                         variant="contained"
                                         color="secondary"
-                                        onClick={() => setShowScript(true)}
+                                        onClick={() =>
+                                            goToScriptPage(movieDetail.title)
+                                        }
                                     >
                                         Script
                                     </Button>
