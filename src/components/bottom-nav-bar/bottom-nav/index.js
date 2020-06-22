@@ -46,22 +46,6 @@ export default function SimpleBottomNavigation() {
             showLabels
             className={classes.root}
         >
-            {/* <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={() => goToMostPopularMovies()}
-                    >
-                        <MovieFilter />
-                    </IconButton>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={() => goToTopRatedMovies()}
-                    >
-                        <Stars />
-                    </IconButton> */}
             <BottomNavigationAction
                 label="Now Playing"
                 value="now-playing"

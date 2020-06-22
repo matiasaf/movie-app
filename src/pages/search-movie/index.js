@@ -86,6 +86,7 @@ export default function SearchMoviePage({ location, match }) {
                                 inputRef={register}
                                 name="title"
                                 autoComplete="Title"
+                                autoFocus
                             />
                         </Grid>
                         <Grid item xs={4}>

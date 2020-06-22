@@ -12,8 +12,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ## [0.1.1]
-- Add the 'lasted scripts loaded' page to show the last movies which has a script.
 - Add the search movie button on the bottomnavbar
+- improve the algorithm when searching the filmaffinity id.
+- improve the algorithm when searching the script.
+
+## [Released]
 
 ## [0.1.0]
 - Adding more scripts to be mapped for searching the script.
@@ -21,8 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Delete comments on movies.
 - Add a better bottom nav bar.
 - Add the now playing movies page (https://api.themoviedb.org/3/movie/now_playing)
-
-## [Released]
 
 ## [0.0.3]
 - Integrate the moviedb API.
