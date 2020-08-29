@@ -102,9 +102,6 @@ export default function LogIn() {
                         Sign In
                     </Button>
                     <Grid container>
-                        {/* <Grid item xs>
-                            <Link href="#">Forgot password?</Link>
-                        </Grid> */}
                         <Grid item>
                             <Link to="/register" className={classes.colorLink}>
                                 {"Don't have an account? Sign Up"}
