@@ -11,16 +11,15 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import { CTX } from './Store';
 import ListMovies from './components/listmovies';
 import PrivateRoute from './components/private-route';
-import MovieDetailsPage from './pages/movie-details';
 import BottomAppBar from './components/bottom-nav-bar';
-import ListPopularMovies from './components/list-popular-movies';
+import MovieScript from './components/movie-script';
+import MovieDetailsPage from './pages/movie-details';
 import TopRatedMovies from './pages/top-rated-movies';
 import ListFavMovies from './pages/list-fav-movies';
 import ToWatchMovies from './pages/to-watch-movies';
 import NowPlayingMovies from './pages/now-playing-movies';
-import MovieScript from './components/movie-script';
 import SearchMoviePage from './pages/search-movie';
-import LastedScriptsAdded from './components/lasted-scripts-added';
+import HomePage from './pages/home';
 
 function App() {
     const theme = createMuiTheme({
@@ -32,7 +31,9 @@ function App() {
 
     const checkAuth = async () => {
         const currentSession = await Auth.currentAuthenticatedUser();
-        dispatch({ type: 'SET_AUTH_USER', payload: currentSession });
+        if (currentSession) {
+            dispatch({ type: 'SET_AUTH_USER', payload: currentSession });
+        }
     };
 
     useEffect(() => {
@@ -43,37 +44,43 @@ function App() {
         <ThemeProvider theme={theme}>
             <Router>
                 <CssBaseline />
-                {/* <Navbar /> */}
                 <BottomAppBar />
                 <Container fixed>
-                    {/* <LastedScriptsAdded /> */}
                     <Switch>
-                        <PrivateRoute path="/movies" component={ListMovies} />
-                        <Route path="/popular" component={ListPopularMovies} />
-                        <Route path="/top-rated" component={TopRatedMovies} />
-
-                        <Route path="/fav-movies" component={ListFavMovies} />
-                        <Route path="/to-watch" component={ToWatchMovies} />
-                        <Route
+                        <Route exact path="/" component={HomePage} />
+                        <PrivateRoute
                             path="/now-playing"
                             component={NowPlayingMovies}
                         />
-                        <Route
+                        <PrivateRoute
+                            path="/top-rated"
+                            component={TopRatedMovies}
+                        />
+
+                        <PrivateRoute
+                            path="/fav-movies"
+                            component={ListFavMovies}
+                        />
+                        <PrivateRoute
+                            path="/to-watch"
+                            component={ToWatchMovies}
+                        />
+
+                        <PrivateRoute
                             path="/search-movie/:movieName?"
                             component={SearchMoviePage}
                         />
 
-                        <Route
+                        <PrivateRoute
                             path="/movie-script/:movieName?"
                             component={MovieScript}
                         />
 
-                        <Route
+                        <PrivateRoute
                             exact
                             path="/movie-details/:id"
                             component={MovieDetailsPage}
                         />
-
                         <Route path="/login">
                             <Login />
                         </Route>
