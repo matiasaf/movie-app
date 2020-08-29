@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Container } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
@@ -9,7 +9,6 @@ import Login from './pages/login';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import { CTX } from './Store';
-import ListMovies from './components/listmovies';
 import PrivateRoute from './components/private-route';
 import BottomAppBar from './components/bottom-nav-bar';
 import MovieScript from './components/movie-script';
@@ -27,12 +26,16 @@ function App() {
             type: 'dark',
         },
     });
-    const [{}, dispatch] = useContext(CTX);
+    const [{ loggedUser }, dispatch] = useContext(CTX);
+    const [loading, setLoading] = useState(true);
 
     const checkAuth = async () => {
-        const currentSession = await Auth.currentAuthenticatedUser();
-        if (currentSession) {
+        try {
+            const currentSession = await Auth.currentAuthenticatedUser();
             dispatch({ type: 'SET_AUTH_USER', payload: currentSession });
+            setLoading(false);
+        } catch (error) {
+            setLoading(false);
         }
     };
 
@@ -40,57 +43,80 @@ function App() {
         checkAuth();
     }, []);
 
-    return (
-        <ThemeProvider theme={theme}>
-            <Router>
+    if (loading) {
+        return (
+            <ThemeProvider theme={theme}>
                 <CssBaseline />
                 <BottomAppBar />
                 <Container fixed>
-                    <Switch>
-                        <Route exact path="/" component={HomePage} />
-                        <PrivateRoute
-                            path="/now-playing"
-                            component={NowPlayingMovies}
-                        />
-                        <PrivateRoute
-                            path="/top-rated"
-                            component={TopRatedMovies}
-                        />
-
-                        <PrivateRoute
-                            path="/fav-movies"
-                            component={ListFavMovies}
-                        />
-                        <PrivateRoute
-                            path="/to-watch"
-                            component={ToWatchMovies}
-                        />
-
-                        <PrivateRoute
-                            path="/search-movie/:movieName?"
-                            component={SearchMoviePage}
-                        />
-
-                        <PrivateRoute
-                            path="/movie-script/:movieName?"
-                            component={MovieScript}
-                        />
-
-                        <PrivateRoute
-                            path="/movie-details/:id"
-                            component={MovieDetailsPage}
-                        />
-                        <Route path="/login">
-                            <Login />
-                        </Route>
-                        <Route path="/register">
-                            <SignIn />
-                        </Route>
-                    </Switch>
+                    <h1>Loading...</h1>
                 </Container>
-            </Router>
-        </ThemeProvider>
-    );
+            </ThemeProvider>
+        );
+    } else {
+        return (
+            <ThemeProvider theme={theme}>
+                <Router>
+                    <CssBaseline />
+                    <BottomAppBar />
+                    <Container fixed>
+                        <Switch>
+                            <Route path="/login">
+                                <Login />
+                            </Route>
+
+                            <Route path="/register">
+                                <SignIn />
+                            </Route>
+
+                            <Route exact path="/" component={HomePage} />
+
+                            <PrivateRoute
+                                path="/now-playing"
+                                component={NowPlayingMovies}
+                                isAuthenticated={!!loggedUser}
+                            />
+                            <PrivateRoute
+                                path="/top-rated"
+                                component={TopRatedMovies}
+                                isAuthenticated={!!loggedUser}
+                            />
+
+                            <PrivateRoute
+                                path="/fav-movies"
+                                component={ListFavMovies}
+                                isAuthenticated={!!loggedUser}
+                            />
+
+                            <PrivateRoute
+                                path="/to-watch"
+                                component={ToWatchMovies}
+                                isAuthenticated={!!loggedUser}
+                            />
+
+                            <PrivateRoute
+                                path="/search-movie/:movieName?"
+                                component={SearchMoviePage}
+                                isAuthenticated={!!loggedUser}
+                            />
+
+                            <PrivateRoute
+                                path="/movie-script/:movieName?"
+                                component={MovieScript}
+                                isAuthenticated={!!loggedUser}
+                            />
+
+                            <PrivateRoute
+                                path="/movie-details/:id"
+                                component={MovieDetailsPage}
+                                isAuthenticated={!!loggedUser}
+                            />
+                        </Switch>
+                    </Container>
+                </Router>
+            </ThemeProvider>
+        );
+    }
 }
 
 export default App;
