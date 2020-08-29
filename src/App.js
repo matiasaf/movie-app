@@ -77,7 +77,6 @@ function App() {
                         />
 
                         <PrivateRoute
-                            exact
                             path="/movie-details/:id"
                             component={MovieDetailsPage}
                         />

@@ -18,6 +18,7 @@ import {
 } from '@material-ui/icons';
 
 import { useForm } from 'react-hook-form';
+import { useHistory } from 'react-router-dom';
 import Axios from 'axios';
 import { CTX } from '../../Store';
 import { Auth } from 'aws-amplify';
@@ -28,7 +29,6 @@ import config from '../../config';
 import { addFilmaffinityId } from '../../services/Movies';
 import MovieScript from '../../components/movie-script';
 import fun from '../../shared/functions';
-import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,7 +43,6 @@ const useStyles = makeStyles((theme) => ({
     },
     image: {
         width: 130,
-        // height: '100%',
     },
     img: {
         margin: 'auto',
@@ -160,7 +159,6 @@ export default function MovieDetailsPage({ location, match }) {
     };
 
     const goToFA = (fa_link) => {
-        // window.location.href = fa_link;
         window.open(fa_link, '_blank');
     };
 
