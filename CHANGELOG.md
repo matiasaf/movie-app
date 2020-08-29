@@ -10,13 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.1.2]
 - Add the search functionality based on text inside the script text.
 
+## [Released]
+
+## [0.1.2]
+- Bug fixes
 
 ## [0.1.1]
 - Add the search movie button on the bottomnavbar
 - improve the algorithm when searching the filmaffinity id.
 - improve the algorithm when searching the script.
-
-## [Released]
 
 ## [0.1.0]
 - Adding more scripts to be mapped for searching the script.
