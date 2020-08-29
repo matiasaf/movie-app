@@ -64,10 +64,13 @@ function App() {
                             <Route path="/login">
                                 <Login />
                             </Route>
+
                             <Route path="/register">
                                 <SignIn />
                             </Route>
+
                             <Route exact path="/" component={HomePage} />
+
                             <PrivateRoute
                                 path="/now-playing"
                                 component={NowPlayingMovies}
@@ -84,6 +87,7 @@ function App() {
                                 component={ListFavMovies}
                                 isAuthenticated={!!loggedUser}
                             />
+
                             <PrivateRoute
                                 path="/to-watch"
                                 component={ToWatchMovies}
